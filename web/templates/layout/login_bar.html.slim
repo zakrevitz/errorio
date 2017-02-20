@@ -1,0 +1,7 @@
+= if @current_user do
+  li
+    = link "Logout", to: auth_path(@conn, :logout), method: :delete, class: "btn btn-danger"
+- else
+  li
+    = if @conn.request_path != auth_path(@conn, :login, "identity") do
+      = link "Login", to: auth_path(@conn, :login, "identity"), class: "btn btn-primary"

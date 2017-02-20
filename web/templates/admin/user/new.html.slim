@@ -1,0 +1,16 @@
+h1 Create new User
+= form_tag admin_user_path(@conn, :callback, "identity"), [method: "POST", novalidate: true] do
+  .form-group
+    label.control-label for="email-input"  Email
+    input.form-control name="email" required="" type="email"
+  .form-group
+    label.control-label for="name-input"  Name
+    input.form-control name="name" required=""
+  .form-group
+    label.control-label for="password-input"  Password
+    input.form-control name="password" required="" type="password"
+  .form-group
+    label.control-label for="password-confirmation-input"  Password confirmation
+    input.form-control name="password_confirmation" required="" type="password"
+  .form-group
+    button.btn.btn-primary Create
