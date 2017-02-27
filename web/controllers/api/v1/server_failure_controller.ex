@@ -1,5 +1,5 @@
 defmodule Errorio.Api.V1.ServerFailureController do
-  use Errorio.Web, :controller
+  use Errorio.Web, :api_controller
 
   alias Errorio.ServerFailure
 

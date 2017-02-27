@@ -43,6 +43,23 @@ defmodule Errorio.Web do
     end
   end
 
+  def api_controller do
+    quote do
+      use Phoenix.Controller
+      # use Guardian.Phoenix.Controller
+
+      alias Errorio.Repo
+      # alias Guardian.Plug.EnsureAuthenticated
+      # alias Guardian.Plug.EnsurePermissions
+
+      import Ecto
+      import Ecto.Query
+
+      import Errorio.Router.Helpers
+      import Errorio.Gettext
+    end
+  end
+
   def admin_controller do
     quote do
       use Phoenix.Controller, namespace: Errorio.Admin

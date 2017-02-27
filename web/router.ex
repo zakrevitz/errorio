@@ -61,11 +61,13 @@ defmodule Errorio.Router do
     delete "/impersonate", SessionController, :stop_impersonating
 
     resources "/users", UserController
+    resources "/server_failures", ServerFailureController
     post "/users/:identity/callback", UserController, :callback
   end
 
   scope "/api", Errorio.Api, as: :api do
-    pipe_through [:api, :api_auth]
+    # pipe_through [:api, :api_auth]
+    pipe_through [:api]
     scope "/v1", V1, as: :v1 do
       resources "/server_failures", ServerFailureController
     end
