@@ -58,7 +58,8 @@ defmodule Errorio.Mixfile do
      {:ueberauth, github: "ueberauth/ueberauth", override: true},
      {:ueberauth_identity, "~>0.2"},
      {:phoenix_slime, "~> 0.8.0"},
-     {:comeonin, "~> 2.4"}]
+     {:comeonin, "~> 2.4"},
+     {:ecto_state_machine, "~> 0.3.0"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

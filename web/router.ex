@@ -37,7 +37,9 @@ defmodule Errorio.Router do
     delete "/logout", AuthController, :logout
 
     get "/", ServerFailureController, :index
-    resources "/server_failures", ServerFailureController
+    resources "/server_failures", ServerFailureController do
+      get "/migrate", ServerFailureController, :migrate, as: :migrate
+    end
     resources "/users", UserController
   end
 
