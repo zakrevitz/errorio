@@ -19,3 +19,7 @@ import "phoenix_html"
 
 // import socket from "./socket"
 import "./bootstrap.min"
+
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover();
+});

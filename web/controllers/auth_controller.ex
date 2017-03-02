@@ -26,7 +26,7 @@ defmodule Errorio.AuthController do
         conn
         |> put_flash(:info, "Signed in as #{user.name}")
         |> Guardian.Plug.sign_in(user, :access, perms: %{default: Guardian.Permissions.max})
-        |> redirect(to: server_failure_path(conn, :index))
+        |> redirect(to: server_failure_template_path(conn, :index))
       {:error, _reason} ->
         conn
         |> put_flash(:error, "Could not authenticate. Error: #{_reason}")

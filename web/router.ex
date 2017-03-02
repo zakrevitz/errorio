@@ -36,9 +36,10 @@ defmodule Errorio.Router do
     pipe_through [:browser, :browser_auth, :impersonation_browser_auth] # Use the default browser stack
     delete "/logout", AuthController, :logout
 
-    get "/", ServerFailureController, :index
-    resources "/server_failures", ServerFailureController do
-      get "/migrate", ServerFailureController, :migrate, as: :migrate
+    get "/", ServerFailureTemplateController, :index
+    resources "/server_failures", ServerFailureTemplateController do
+      get "/migrate", ServerFailureTemplateController, :migrate, as: :migrate
+      get "/assign", ServerFailureTemplateController, :assign, as: :assign
     end
     resources "/users", UserController
   end
@@ -63,7 +64,7 @@ defmodule Errorio.Router do
     delete "/impersonate", SessionController, :stop_impersonating
 
     resources "/users", UserController
-    resources "/server_failures", ServerFailureController
+    resources "/server_failures", ServerFailureTemplateController
     post "/users/:identity/callback", UserController, :callback
   end
 

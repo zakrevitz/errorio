@@ -1,5 +1,8 @@
 = if @current_user do
   li
+    |Hello,&nbsp;
+    = @current_user.name
+  li
     = link "Logout", to: auth_path(@conn, :logout), method: :delete, class: "btn btn-danger"
 - else
   li

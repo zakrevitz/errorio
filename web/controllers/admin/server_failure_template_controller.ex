@@ -1,7 +1,7 @@
-defmodule Errorio.Admin.ServerFailureController do
+defmodule Errorio.Admin.ServerFailureTemplateController do
   use Errorio.Web, :admin_controller
 
-  alias Errorio.ServerFailure
+  alias Errorio.ServerFailureTemplate
   alias Errorio.User
   alias Errorio.ErrorioHelper
 
@@ -9,7 +9,7 @@ defmodule Errorio.Admin.ServerFailureController do
   plug EnsureAuthenticated, [key: :admin, handler: __MODULE__]
 
   def index(conn, _params, current_user, _claims) do
-    server_failures = Repo.all(ServerFailure)
+    server_failures = Repo.all(ServerFailureTemplate)
     render(conn, "index.html", server_failures: server_failures, current_user: current_user)
   end
 
@@ -19,7 +19,7 @@ defmodule Errorio.Admin.ServerFailureController do
       nil ->
         conn
         |> put_flash(:error, "Could not find server failure ID:#{id}.")
-        |> redirect to: admin_server_failure_path(conn, :index)
+        |> redirect to: admin_server_failure_template_path(conn, :index)
       server_failure ->
         conn
         |> assign(:server_failure, server_failure)
@@ -29,18 +29,18 @@ defmodule Errorio.Admin.ServerFailureController do
 
   def delete(conn, %{"id" => id}, current_user, _claims) do
     {id, _} = Integer.parse(id)
-    result = ServerFailure
+    result = ServerFailureTemplate
     |> Repo.get!(id)
     |> Repo.delete
     case result do
       {:ok, server_failure} ->
         conn
         |> put_flash(:info, "Bug ID:#{id} successfully deleted!")
-        |> redirect to: admin_server_failure_path(conn, :index)
+        |> redirect to: admin_server_failure_template_path(conn, :index)
       {:error, _reason} ->
         conn
         |> put_flash(:error, "Could not delete. Error: #{ErrorioHelper.humanize_atom(_reason)}")
-        |> redirect to: admin_server_failure_path(conn, :index)
+        |> redirect to: admin_server_failure_template_path(conn, :index)
     end
   end
 
@@ -51,7 +51,7 @@ defmodule Errorio.Admin.ServerFailureController do
   end
 
   defp find_resource(id) do
-    result = ServerFailure
+    result = ServerFailureTemplate
     |> Repo.get(id)
 
     result

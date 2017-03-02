@@ -2,7 +2,7 @@
   <li role='presentation' class='<%= active_on_current(@conn, admin_user_path(@conn, :index)) %>'>
     <%= link "Users", to: admin_user_path(@conn, :index) %>
   </li>
-  <li role='presentation' class='<%= active_on_current(@conn, admin_server_failure_path(@conn, :index)) %>'>
-    <%= link "Server Failures", to: admin_server_failure_path(@conn, :index) %>
+  <li role='presentation' class='<%= active_on_current(@conn, admin_server_failure_template_path(@conn, :index)) %>'>
+    <%= link "Server Failures", to: admin_server_failure_template_path(@conn, :index) %>
   </li>
 </ul>

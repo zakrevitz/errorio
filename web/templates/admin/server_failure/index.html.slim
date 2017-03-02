@@ -2,16 +2,14 @@ table.table.table-hover
   thead
     tr
       th ID
-      th Title
-      th Server
+      th Count
       th Actions
   tbody
     = for server_failure <- @server_failures do
       tr
         td= server_failure.id
-        td= server_failure.title
-        td= server_failure.server
+        td= server_failure.server_failure_count
         td.actions
-          = link "Details", to: admin_server_failure_path(@conn, :show, server_failure.id), class: "btn btn-xs btn-info"
-          = link "Update", to: admin_server_failure_path(@conn, :edit, server_failure.id), class: "btn btn-xs btn-info"
-          = link "Delete", to: admin_server_failure_path(@conn, :delete, server_failure.id), method: :delete, class: "btn btn-xs btn-danger"
+          = link "Details", to: admin_server_failure_template_path(@conn, :show, server_failure.id), class: "btn btn-xs btn-info"
+          = link "Update", to: admin_server_failure_template_path(@conn, :edit, server_failure.id), class: "btn btn-xs btn-info"
+          = link "Delete", to: admin_server_failure_template_path(@conn, :delete, server_failure.id), method: :delete, class: "btn btn-xs btn-danger"

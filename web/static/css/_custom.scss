@@ -9,3 +9,23 @@
 .admin-actions {
   margin: 10px 0;
 }
+
+a.time {
+  color: inherit;
+  border-bottom: 1px dashed #333;
+
+  &:hover, &:focus {
+    text-decoration: none;
+    border-bottom: 1px solid #333;
+  }
+}
+
+nav.login-bar {
+  overflow: hidden;
+  clear: both;
+  margin-bottom: 10px;
+
+  > ul.nav {
+    line-height: 34px;
+  }
+}
