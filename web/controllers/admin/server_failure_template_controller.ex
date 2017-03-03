@@ -22,8 +22,9 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
         |> put_flash(:error, "Could not find server failure ID:#{id}.")
         |> redirect to: admin_server_failure_template_path(conn, :index)
       server_failure ->
+        server_failure = server_failure |> Repo.preload([[event_transition_logs: :responsible], :project, :assignee, :server_failures])
         conn
-        |> assign(:server_failure, server_failure)
+        |> assign(:server_failure_template, server_failure)
         |> render("show.html", current_user: current_user)
     end
   end

@@ -1,1 +1,44 @@
-= @server_failure.server_failure_count
+h1 = @server_failure_template.title
+.dropdown
+  button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions
+    span.caret
+  ul.dropdown-menu
+    = for event <- ServerFailureTemplate.events do
+      = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [@server_failure_template]) do
+        li
+          = link(ErrorioHelper.humanize_atom(event), to: server_failure_template_migrate_path(@conn, :migrate, @server_failure_template.id, event: event))
+
+p
+  | It's&nbsp;
+  = if @server_failure_template.assignee do
+    = @server_failure_template.assignee.name
+  - else
+    |noone's
+  |&nbsp;problem.
+
+ul
+  = for serv <- @server_failure_template.server_failures do
+    li = serv.title
+    li = serv.request
+    li = serv.processed_by
+    li = serv.exception
+    li = serv.host
+    li = serv.backtrace
+    li = serv.server
+    li = serv.params
+    li = serv.inserted_at
+    hr
+table.table.table-striped..table-bordered
+  thead
+    tr
+      th ID
+      th Info
+      th Responsible
+      th Time
+  tbody
+    = for event <- @server_failure_template.event_transition_logs do
+      tr
+        td=event.id
+        td=event.info
+        td=event.responsible.name
+        td=event.inserted_at

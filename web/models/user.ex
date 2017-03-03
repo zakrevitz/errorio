@@ -9,7 +9,6 @@ defmodule Errorio.User do
     field :is_admin, :boolean
 
     has_many :authorizations, Errorio.Authorization
-
     timestamps
   end
 

@@ -38,6 +38,7 @@ defmodule Errorio.ServerFailureTemplate do
     belongs_to :assignee, Errorio.User, foreign_key: :user_id
     belongs_to :project, Errorio.Project
     has_many :server_failures, Errorio.ServerFailure
+    has_many :event_transition_logs, Errorio.EventTransitionLog
 
     timestamps()
   end
@@ -90,7 +91,19 @@ defmodule Errorio.ServerFailureTemplate do
       {:error, reason} -> {:error, reason}
       server_failure_template ->
         update_assignee(server_failure_template, user.id)
+    end
+  end
 
+  def log_transition(new_template, old_template, responsible) do
+    case new_template do
+      {:ok, server_failure_template} ->
+        params = %{info: generate_info(old_template, server_failure_template, responsible.name), responsible_id: responsible.id}
+        server_failure_template
+        |> Ecto.build_assoc(:event_transition_logs)
+        |> Errorio.EventTransitionLog.changeset(params)
+        |> Errorio.Repo.insert
+        new_template
+      {:error, reason} -> {:error, reason}
     end
   end
 
@@ -100,6 +113,7 @@ defmodule Errorio.ServerFailureTemplate do
     |> Errorio.Repo.update
   end
 
-  def last_time_seen(server_failure_template) do
+  defp generate_info(old, new, name) do
+    name <> " moved bug from state: " <> old.state <> " to: " <> new.state
   end
 end

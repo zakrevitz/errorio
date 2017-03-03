@@ -36,6 +36,7 @@ defmodule Errorio.ServerFailureTemplateController do
       server_failure_template ->
         result = StateMachine.migrate(String.to_atom(event), server_failure_template, Errorio.ServerFailureTemplate)
         |> ServerFailureTemplate.assign(current_user)
+        |> ServerFailureTemplate.log_transition(server_failure_template, current_user)
         case result do
           {:ok, server_failure_template} ->
             conn
