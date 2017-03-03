@@ -34,6 +34,7 @@ defmodule Errorio.ServerFailureTemplate do
     field :processed_by, :string
     field :params, :string
     field :state, :string, default: "to_do"
+    field :last_time_seen_at, :naive_datetime
     belongs_to :assignee, Errorio.User, foreign_key: :user_id
     belongs_to :project, Errorio.Project
     has_many :server_failures, Errorio.ServerFailure
@@ -50,9 +51,55 @@ defmodule Errorio.ServerFailureTemplate do
     |> validate_required([:server_failure_count, :md5_hash])
   end
 
+  def create_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:md5_hash, :title, :processed_by, :params])
+    |> validate_required([:md5_hash, :title])
+  end
+
+  def create_child_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [])
+    |> cast_assoc(:server_failures, required: true)
+  end
+
   def assign_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:user_id])
     |> validate_required([:user_id])
+  end
+
+  def can_assign?(model, user_id) do
+    case model.assignee do
+      nil ->
+        true
+      assignee ->
+        case assignee.id do
+          ^user_id ->
+            false
+          _ ->
+            true
+        end
+    end
+  end
+
+  def assign(model, user) do
+    case model do
+      {:ok, server_failure_template} ->
+        update_assignee(server_failure_template, user.id)
+      {:error, reason} -> {:error, reason}
+      server_failure_template ->
+        update_assignee(server_failure_template, user.id)
+
+    end
+  end
+
+  def update_assignee(server_failure_template, user_id) do
+    result = server_failure_template
+    |> assign_changeset(%{user_id: user_id})
+    |> Errorio.Repo.update
+  end
+
+  def last_time_seen(server_failure_template) do
   end
 end

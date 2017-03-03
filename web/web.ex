@@ -92,6 +92,8 @@ defmodule Errorio.Web do
       import Errorio.ErrorHelpers
       import Errorio.Gettext
       import Errorio.ViewHelpers
+
+      alias Errorio.ErrorioHelper
     end
   end
 

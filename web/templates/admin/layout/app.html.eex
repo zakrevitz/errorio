@@ -13,8 +13,9 @@
   </head>
 
   <body>
-    <div class="container" role="main">
+    <div class="container-fluid" role="main">
       <div class="header">
+        <h1 class="admin">Admin place</h1>
         <ul class="nav nav-pills pull-right btn-group-xs">
           <%= render "login_bar.html", current_user: @current_user, conn: @conn %>
         </ul>

@@ -64,7 +64,10 @@ defmodule Errorio.Router do
     delete "/impersonate", SessionController, :stop_impersonating
 
     resources "/users", UserController
-    resources "/server_failures", ServerFailureTemplateController
+    resources "/server_failures", ServerFailureTemplateController do
+      get "/migrate", ServerFailureTemplateController, :migrate, as: :migrate
+    end
+    resources "/projects", ProjectController
     post "/users/:identity/callback", UserController, :callback
   end
 
@@ -72,7 +75,7 @@ defmodule Errorio.Router do
     # pipe_through [:api, :api_auth]
     pipe_through [:api]
     scope "/v1", V1, as: :v1 do
-      resources "/server_failures", ServerFailureController
+      resources "/server_failures", ServerFailureTemplateController
     end
   end
 end

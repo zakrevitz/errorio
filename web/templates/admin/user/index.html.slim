@@ -1,6 +1,6 @@
 .row.pull-right.admin-actions
   = link "Create new", to: admin_user_path(@conn, :new), class: "btn btn-info"
-table.table.table-hover
+table.table.table-hover.table-bordered
   thead
     tr
       th ID
@@ -16,9 +16,9 @@ table.table.table-hover
         td= user.email
         td
           = if user.is_admin do
-            span.glyphicon.glyphicon-ok.green
+            i.fa.fa-check.fa-lg.green
           - else
-            span.glyphicon.glyphicon-remove.red
+            i.fa.fa-close.fa-lg.red
         td.actions
           = link "Impersonate", to: admin_impersonation_path(@conn, :impersonate, to_string(user.id)), method: :post, class: "btn btn-xs btn-warning"
           = link "Update", to: admin_user_path(@conn, :edit, user.id), class: "btn btn-xs btn-info"

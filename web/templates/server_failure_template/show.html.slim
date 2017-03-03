@@ -1,5 +1,6 @@
 h1 = @server_failure_template.title
-= link "Take", to: server_failure_template_assign_path(@conn, :assign, @server_failure_template.id)
+= if ServerFailureTemplate.can_assign?(@server_failure_template, @current_user.id) do
+  = link "Take", to: server_failure_template_assign_path(@conn, :assign, @server_failure_template.id)
 .dropdown
   button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions
     span.caret

@@ -1,0 +1,13 @@
+ul.nav.nav-tabs.admin-tabs
+  li class="#{active_on_current(@conn, admin_user_path(@conn, :index))}" role="presentation"
+    = link to: admin_user_path(@conn, :index) do
+      i.fa.fa-user.fa-lg
+      | Users
+  li class="#{active_on_current(@conn, admin_server_failure_template_path(@conn, :index))}" role="presentation"
+    = link to: admin_server_failure_template_path(@conn, :index) do
+      i.fa.fa-bug.fa-lg
+      |Server Failures
+  li class="#{active_on_current(@conn, admin_project_path(@conn, :index))}" role="presentation"
+    = link to: admin_project_path(@conn, :index) do
+      i.fa.fa-bars.fa-lg
+      | Projects

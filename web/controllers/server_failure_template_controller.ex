@@ -35,12 +35,12 @@ defmodule Errorio.ServerFailureTemplateController do
         |> redirect(to: server_failure_template_path(conn, :index))
       server_failure_template ->
         result = StateMachine.migrate(String.to_atom(event), server_failure_template, Errorio.ServerFailureTemplate)
+        |> ServerFailureTemplate.assign(current_user)
         case result do
           {:ok, server_failure_template} ->
             conn
             |> put_flash(:info, "Yep, we changed state ^_^")
-            |> assign(:server_failure_template, server_failure_template)
-            |> render("show.html", current_user: current_user)
+            |> redirect(to: server_failure_template_path(conn, :show, server_failure_template.id))
           {:error, _reason} ->
             conn
             |> put_flash(:error, "Could not migrate. Error: #{ErrorioHelper.humanize_atom(_reason)}")
@@ -58,14 +58,12 @@ defmodule Errorio.ServerFailureTemplateController do
         |> redirect(to: server_failure_template_path(conn, :index))
       server_failure_template ->
         result = server_failure_template
-        |> ServerFailureTemplate.assign_changeset(%{user_id: current_user.id})
-        |> Repo.update
+        |> ServerFailureTemplate.update_assignee(current_user.id)
         case result do
           {:ok, server_failure_template} ->
             conn
             |> put_flash(:info, "Not it is officially your problem")
-            |> assign(:server_failure_template, server_failure_template)
-            |> render("show.html", current_user: current_user)
+            |> redirect(to: server_failure_template_path(conn, :show, server_failure_template.id))
           {:error, _reason} ->
             conn
             |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(_reason)}")

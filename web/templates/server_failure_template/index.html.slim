@@ -2,7 +2,7 @@ ul
   = for serv <- @server_failures do
     li = serv.title
     li
-      = link "Occurancies: #{serv.server_failure_count} time(s).", to: server_failure_template_path(@conn, :show, serv.id)
+      = link "Occurrences: #{serv.server_failure_count} time(s).", to: server_failure_template_path(@conn, :show, serv.id)
     li = serv.processed_by
     li = serv.params
     li = ErrorioHelper.humanize_atom(serv.state)
@@ -10,8 +10,8 @@ ul
       a.time href="#" data-toggle="popover" data-content="#{ErrorioHelper.format_date(serv.inserted_at)}"
          = "First time seen: #{ErrorioHelper.format_date_relative(serv.inserted_at)}"
     li
-      a.time href="#" data-toggle="popover" data-content="#{ErrorioHelper.format_date(serv.updated_at)}"
-         = "First time seen: #{ErrorioHelper.format_date_relative(serv.updated_at)}"
+      a.time href="#" data-toggle="popover" data-content="#{ErrorioHelper.format_date(serv.last_time_seen_at)}"
+         = "Last time seen: #{ErrorioHelper.format_date_relative(serv.last_time_seen_at)}"
     li
       .dropdown
         button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions

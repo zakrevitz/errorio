@@ -1,4 +1,4 @@
-.glyphicon {
+.fa {
   &.green {
     color: #5cb85c;
   }
@@ -9,7 +9,31 @@
 .admin-actions {
   margin: 10px 0;
 }
+h1.admin {
+  display: inline-block;
+}
 
+ul.nav.nav-tabs.admin-tabs >li {
+  min-width: 88px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  i {
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+.header{
+  overflow: hidden;
+  clear: both;
+  .admin-logout {
+    margin-bottom: 5px;
+  }
+}
+.dropdown.admin {
+  display: inline-block;
+}
+////////////////////////////////////////////////////////////////////
 a.time {
   color: inherit;
   border-bottom: 1px dashed #333;
