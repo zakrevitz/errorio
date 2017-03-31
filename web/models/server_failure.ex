@@ -7,9 +7,12 @@ defmodule Errorio.ServerFailure do
     field :processed_by, :string
     field :exception, :string
     field :host, :string
-    field :backtrace, :string
+    field :backtrace, {:array, :map}
     field :server, :string
-    field :params, :string
+    field :params, :map
+    field :session, :map
+    field :headers, :map
+    field :context, :map
     belongs_to :server_failure_templates, Errorio.ServerFailureTemplate, foreign_key: :server_failure_template_id
 
     timestamps()
@@ -21,14 +24,14 @@ defmodule Errorio.ServerFailure do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :request, :processed_by, :exception, :host, :backtrace, :server, :params])
-    |> validate_required([:title, :request, :processed_by, :exception, :host, :backtrace, :server, :params])
+    |> cast(params, [:title, :request, :processed_by, :exception, :host, :backtrace, :server, :params, :session, :headers, :context])
+    |> validate_required([:title, :request, :processed_by, :exception, :host, :backtrace, :server])
   end
 
   def create_changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :request, :processed_by, :exception, :host, :backtrace, :server, :params, :server_failure_template_id])
-    |> validate_required([:title,:host, :backtrace, :server])
+    |> cast(params, [:title, :request, :processed_by, :exception, :host, :backtrace, :server, :params, :server_failure_template_id, :session, :headers, :context])
+    |> validate_required([:title, :host, :backtrace, :server])
     |> update_template_counter(1)
   end
 

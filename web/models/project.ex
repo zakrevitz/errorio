@@ -6,6 +6,8 @@ defmodule Errorio.Project do
     field :template, :string
     field :api_key, :string
 
+    has_many :server_failure_templates, Errorio.ServerFailureTemplate
+
     timestamps()
   end
 
