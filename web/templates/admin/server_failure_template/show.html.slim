@@ -19,14 +19,14 @@ p
 ul
   = for serv <- @server_failure_template.server_failures do
     li = serv.title
-    li = serv.request
-    li = serv.processed_by
-    li = serv.exception
-    li = serv.host
-    li = serv.backtrace
-    li = serv.server
-    li = serv.params
-    li = serv.inserted_at
+    / li = serv.request
+    / li = serv.processed_by
+    / li = serv.exception
+    / li = serv.host
+    / li = serv.backtrace
+    / li = serv.server
+    / li = serv.params
+    / li = serv.inserted_at
     hr
 table.table.table-striped.table-bordered
   thead

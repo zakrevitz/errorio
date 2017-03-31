@@ -3,12 +3,19 @@ defmodule Errorio.ServerFailureTemplateController do
   alias Errorio.ServerFailureTemplate
   alias Errorio.ErrorioHelper
   alias Errorio.StateMachine
+  alias Errorio.Statistic.ServerFailure, as: ServerFailureStats
 
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
 
   def index(conn, _params, current_user, _claims) do
-    server_failures = Repo.all(ServerFailureTemplate)
-    render(conn, "index.html", server_failures: server_failures, current_user: current_user)
+    page =
+      ServerFailureTemplate
+      |> Repo.paginate(_params)
+
+    render conn, :index,
+      server_failures: page.entries,
+      current_user: current_user,
+      page: page
   end
 
   def show(conn, %{"id" => id}, current_user, _claims) do

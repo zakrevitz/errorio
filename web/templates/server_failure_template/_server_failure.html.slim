@@ -1,0 +1,21 @@
+li = @serv.title
+li
+  = link "Occurrences: #{@serv.server_failure_count} time(s).", to: server_failure_template_path(@conn, :show, @serv.id)
+li = @serv.processed_by
+li = @serv.params
+li = ErrorioHelper.humanize_atom(@serv.state)
+li
+  a.time href="#" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@serv.inserted_at)}"
+     = "First time seen: #{ErrorioHelper.format_date_relative(@serv.inserted_at)}"
+li
+  a.time href="#" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@serv.last_time_seen_at)}"
+     = "Last time seen: #{ErrorioHelper.format_date_relative(@serv.last_time_seen_at)}"
+.dropdown
+  button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions
+    span.caret
+  ul.dropdown-menu
+    = for event <- ServerFailureTemplate.events do
+      = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [@serv]) do
+        li
+          = link(ErrorioHelper.humanize_atom(event), to: server_failure_template_migrate_path(@conn, :migrate, @serv.id, event: event))
+hr

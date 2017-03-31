@@ -34,7 +34,7 @@ defmodule Errorio.Mixfile do
 
   def applications(_) do
     [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin, :ueberauth, :timex]
+                    :phoenix_ecto, :postgrex, :comeonin, :ueberauth, :timex, :scrivener_ecto, :scrivener_html]
   end
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
@@ -60,7 +60,9 @@ defmodule Errorio.Mixfile do
      {:phoenix_slime, "~> 0.8.0"},
      {:comeonin, "~> 2.4"},
      {:ecto_state_machine, "~> 0.3.0"},
-     {:timex, "~> 3.1"}]
+     {:timex, "~> 3.1"},
+     {:scrivener_ecto, "~> 1.2"},
+     {:scrivener_html, "~> 1.1"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
