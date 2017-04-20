@@ -54,8 +54,8 @@ defmodule Errorio.ServerFailureTemplate do
 
   def create_changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:md5_hash, :title, :processed_by, :params])
-    |> validate_required([:md5_hash, :title])
+    |> cast(params, [:md5_hash, :title, :processed_by, :params, :project_id])
+    |> validate_required([:md5_hash, :title, :project_id])
   end
 
   def create_child_changeset(struct, params \\ %{}) do
@@ -111,6 +111,17 @@ defmodule Errorio.ServerFailureTemplate do
     result = server_failure_template
     |> assign_changeset(%{user_id: user_id})
     |> Errorio.Repo.update
+  end
+
+  def statistics(query) do
+    (from se in query,
+      select: %{
+        unassigned: fragment("count(case when user_id IS NULL then 1 else null end)"),
+        unresolved: fragment("count(case when state = 'to_do' then 1 else null end)"),
+        in_progress: fragment("count(case when state = 'in_progress' then 1 else null end)"),
+        reopened: fragment("count(case when state = 'reopened' then 1 else null end)")
+      }
+    ) |> Errorio.Repo.all |> List.first
   end
 
   defp generate_info(old, new, name) do

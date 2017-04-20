@@ -6,10 +6,10 @@ defmodule Errorio.Api.ServerFailure.Builder do
   alias Errorio.Api.Structs.Template, as: TemplateStruct
   require Logger
 
-  def setup_server_failure(server_failure_params) do
-    # parsed_params = Poison.Parser.parse!(server_failure_params)
-    parsed_params = (server_failure_params)
-    {failure_struct, template_struct} = create_structs(parsed_params)
+  def setup_server_failure(server_failure_params, project) do
+    parsed_params = Poison.Parser.parse!(server_failure_params) # JSON version
+    # parsed_params = (server_failure_params) # Elixir.Map version
+    {failure_struct, template_struct} = create_structs(parsed_params, project.id)
     case Repo.transaction(fn ->
       case find_server_failure_template(template_struct) do
         {:ok, template} ->
@@ -24,17 +24,18 @@ defmodule Errorio.Api.ServerFailure.Builder do
     end
   end
 
-  defp create_structs(%{}=params) do
+  defp create_structs(%{}=params, project_id) do
     failure_struct = create_failure_struct(params)
     template_struct = Map.merge(%TemplateStruct{}, Map.take(failure_struct, [:title, :processed_by]))
 
     template_struct = %{template_struct | md5_hash: generate_md5_hash(failure_struct)}
+    template_struct = %{template_struct | project_id: project_id}
 
     {failure_struct, template_struct}
   end
 
   defp create_failure_struct(%{}=params) do
-    struct = FailureStruct.new(params)
+    FailureStruct.new(params)
   end
 
   defp create_server_failure(template, failure_struct) do

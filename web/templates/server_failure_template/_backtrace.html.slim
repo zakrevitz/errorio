@@ -1,0 +1,10 @@
+ul.list
+  = for backtrace_item <- @backtrace do
+    li
+      = backtrace_item["file"]
+      | :
+      = backtrace_item["line"]
+      = " in "
+      = backtrace_item["function"]
+
+

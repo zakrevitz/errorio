@@ -12,4 +12,8 @@ defmodule Errorio.Api.V1.ServerFailureTemplateView do
   def render("server_failure_template.json", %{server_failure_template: server_failure_template}) do
     %{id: server_failure_template.id}
   end
+
+  def render("error.json", %{error: error}) do
+    %{error: error}
+  end
 end

@@ -1,0 +1,6 @@
+ul.list
+  = for {header_key, header_value} <- @headers do
+    li style="word-break: break-all"
+      b = header_key
+      ' :
+      = header_value

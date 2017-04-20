@@ -13,10 +13,23 @@ defmodule Errorio.ErrorioHelper do
   end
 
   def format_date(date) do
-    Timex.format!(date, "%H:%M:%S %d %b %Y", :strftime)
+    Timex.local(date)
+    |> Timex.format!("%H:%M:%S %d %b %Y %:z", :strftime)
   end
 
   def format_date_relative(date) do
-    Timex.format!(date, "{relative}", :relative)
+    Timex.local(date)
+    |> Timex.format!("{relative}", :relative)
+  end
+
+  def sum(list, key) do
+    Enum.reduce(list, 0, fn(x, acc) -> Map.get(x, key, 0) + acc end)
+  end
+
+  def truncate_string(str, truncate_length \\ 30, omit \\ "...") do
+    case (String.length(str) > (truncate_length - String.length(omit))) do
+      true -> "#{str |> String.slice(0, truncate_length) |> String.trim_trailing}#{omit}"
+      false -> str
+    end
   end
 end

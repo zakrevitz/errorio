@@ -4,12 +4,26 @@ defmodule Errorio.ServerFailureTemplateController do
   alias Errorio.ErrorioHelper
   alias Errorio.StateMachine
   alias Errorio.Statistic.ServerFailure, as: ServerFailureStats
+  alias Errorio.ServerFailure, as: ServerFailure
 
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
+
+  def index(conn, params = %{"project_id" => project_id}, current_user, _claims) do
+    page =
+      from(ser_tem in ServerFailureTemplate, where: ser_tem.project_id == ^project_id)
+      |> preload(:assignee)
+      |> Repo.paginate(params)
+
+    render conn, :index,
+      server_failures: page.entries,
+      current_user: current_user,
+      page: page
+  end
 
   def index(conn, _params, current_user, _claims) do
     page =
       ServerFailureTemplate
+      |> preload(:assignee)
       |> Repo.paginate(_params)
 
     render conn, :index,
@@ -20,7 +34,8 @@ defmodule Errorio.ServerFailureTemplateController do
 
   def show(conn, %{"id" => id}, current_user, _claims) do
     {id, _} = Integer.parse(id)
-    server_failure_template = find_resource(id) |> Repo.preload([:server_failures, :assignee])
+    server_failure_template = find_resource(id) |> Repo.preload([:assignee])
+    server_failure_info = find_server_failure_info(id)
     case server_failure_template do
       nil ->
         conn
@@ -29,6 +44,7 @@ defmodule Errorio.ServerFailureTemplateController do
       server_failure ->
         conn
         |> assign(:server_failure_template, server_failure)
+        |> assign(:server_failure_info, server_failure_info)
         |> render("show.html", current_user: current_user)
     end
   end
@@ -90,5 +106,14 @@ defmodule Errorio.ServerFailureTemplateController do
     result = ServerFailureTemplate
     |> Repo.get(id)
     result
+  end
+
+  defp find_server_failure_info(id) do
+      ServerFailure
+      |> where([sf], sf.server_failure_template_id == ^id)
+      |> order_by(desc: :updated_at)
+      |> limit(1)
+      |> Repo.all
+      |> List.first
   end
 end

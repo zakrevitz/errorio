@@ -1,0 +1,6 @@
+ul.list
+  = for {session_key, session_value} <- @session do
+    li style="word-break: break-all"
+      b = session_key
+      ' :
+      = session_value

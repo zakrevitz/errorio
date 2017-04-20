@@ -1,5 +1,6 @@
-ul
-  = for serv <- @server_failures do
-    = render "_server_failure.html", serv: serv, conn: @conn
-
-  = pagination_links @page
+.server_failure_wrapper
+  .server_failure_container
+    = for serv <- @server_failures do
+      = render "_server_failure.html", serv: serv, conn: @conn
+  = if @page.total_pages > 1 do
+    = pagination_links @page

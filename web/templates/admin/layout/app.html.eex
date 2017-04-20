@@ -9,10 +9,10 @@
 
     <title>Admin - Phoenix Guardian</title>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/admin_app.css") %>">
   </head>
 
-  <body>
+  <body style="background-color: #fff">
     <div class="container-fluid" role="main">
       <div class="header">
         <h1 class="admin">Admin place</h1>

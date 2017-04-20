@@ -35,6 +35,17 @@ defmodule Errorio.ServerFailure do
     |> update_template_counter(1)
   end
 
+  def general_chart(query) do
+    (from se in query,
+      select: %{
+        unassigned: fragment("count(case when user_id IS NULL then 1 else null end)"),
+        unresolved: fragment("count(case when state = 'to_do' then 1 else null end)"),
+        in_progress: fragment("count(case when state = 'in_progress' then 1 else null end)"),
+        reopened: fragment("count(case when state = 'reopened' then 1 else null end)")
+      }
+    ) |> Errorio.Repo.all |> List.first
+  end
+
   defp update_template_counter(changeset, value) do
     changeset
     |> prepare_changes(fn prepared_changeset ->

@@ -32,20 +32,26 @@ defmodule Errorio.Router do
     plug Guardian.Plug.LoadResource
   end
 
+  pipeline :auth_layout do
+    plug :put_layout, {Errorio.LayoutView, :auth}
+  end
+
   scope "/", Errorio do
     pipe_through [:browser, :browser_auth, :impersonation_browser_auth] # Use the default browser stack
     delete "/logout", AuthController, :logout
 
-    get "/", ServerFailureTemplateController, :index
+    get "/", DashboardController, :index
     resources "/server_failures", ServerFailureTemplateController do
       get "/migrate", ServerFailureTemplateController, :migrate, as: :migrate
       get "/assign", ServerFailureTemplateController, :assign, as: :assign
     end
-    resources "/users", UserController
+
+    resources "/projects", ProjectController
+    resources "/users", UserController, only: [:new]
   end
 
   scope "/auth", Errorio do
-    pipe_through [:browser, :browser_auth] # Use the default browser stack
+    pipe_through [:browser, :browser_auth, :auth_layout] # Use the default browser stack
 
     get "/:identity", AuthController, :login
     get "/:identity/callback", AuthController, :callback

@@ -22,6 +22,10 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :logger,
+  level: :debug,
+  truncate: :infinity
+
 config :guardian, Guardian,
   issuer: "Errorio.#{Mix.env}",
   ttl: {14, :days},

@@ -1,0 +1,64 @@
+.row
+  .col-lg-3.col-md-6
+    .panel.panel-red
+      .panel-heading
+        .row
+          .col-xs-3
+            i.fa.fa-comments.fa-5x
+          .col-xs-9.text-right
+            .huge = @stats[:unresolved]
+            div Unresolved Errors
+      = link to: server_failure_template_path(@conn, :index) do
+        .panel-footer
+          span.pull-left View Details
+          span.pull-right
+            i.fa.fa-arrow-circle-right
+          .clearfix
+
+  .col-lg-3.col-md-6
+    .panel.panel-yellow
+      .panel-heading
+        .row
+          .col-xs-3
+            i.fa.fa-shopping-cart.fa-5x
+          .col-xs-9.text-right
+            .huge = @stats[:unassigned]
+            div Unassigned Errors
+      a href="#"
+        .panel-footer
+          span.pull-left View Details
+          span.pull-right
+            i.fa.fa-arrow-circle-right
+          .clearfix
+
+  .col-lg-3.col-md-6
+    .panel.panel-green
+      .panel-heading
+        .row
+          .col-xs-3
+            i.fa.fa-tasks.fa-5x
+          .col-xs-9.text-right
+            .huge = @stats[:in_progress]
+            div Errors in progress
+      a href="#"
+        .panel-footer
+          span.pull-left View Details
+          span.pull-right
+            i.fa.fa-arrow-circle-right
+          .clearfix
+
+  .col-lg-3.col-md-6
+    .panel.panel-primary
+      .panel-heading
+        .row
+          .col-xs-3
+            i.fa.fa-support.fa-5x
+          .col-xs-9.text-right
+            .huge = @stats[:reopened]
+            div Reopened Errors
+      a href="#"
+        .panel-footer
+          span.pull-left View Details
+          span.pull-right
+            i.fa.fa-arrow-circle-right
+          .clearfix

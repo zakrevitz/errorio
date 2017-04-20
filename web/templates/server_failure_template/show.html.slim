@@ -1,32 +1,84 @@
-h1 = @server_failure_template.title
-= if ServerFailureTemplate.can_assign?(@server_failure_template, @current_user.id) do
-  = link "Take", to: server_failure_template_assign_path(@conn, :assign, @server_failure_template.id)
-.dropdown
-  button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions
-    span.caret
-  ul.dropdown-menu
-    = for event <- ServerFailureTemplate.events do
-      = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [@server_failure_template]) do
+.content.server_failure
+  .server_failure_content_header
+    .title
+      h1 = @server_failure_template.title
+      .date_time
+        a.time href="javascript:void(0)" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@server_failure_template.last_time_seen_at)}"
+           = "Last time seen: #{ErrorioHelper.format_date_relative(@server_failure_template.last_time_seen_at)}"
+    .actions
+      .btn-group
+        = if ServerFailureTemplate.can_assign?(@server_failure_template, @current_user.id) do
+          = link "Take", to: server_failure_template_assign_path(@conn, :assign, @server_failure_template.id), class: 'btn btn-primary'
+        .btn-group
+          button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions
+            span.caret
+          ul.dropdown-menu
+            = for event <- ServerFailureTemplate.events do
+              = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [@server_failure_template]) do
+                li
+                  = link(ErrorioHelper.humanize_atom(event), to: server_failure_template_migrate_path(@conn, :migrate, @server_failure_template.id, event: event))
+
+    .responsible
+      | It's&nbsp;
+      = if @server_failure_template.assignee do
+        = @server_failure_template.assignee.name
+      - else
+        |noone's
+      |&nbsp;problem.
+
+  .server_failure_content
+    .tabs
+      ul.nav.nav-tabs
+        li.active
+          a data-toggle="tab" href="#summary" Summary
         li
-          = link(ErrorioHelper.humanize_atom(event), to: server_failure_template_migrate_path(@conn, :migrate, @server_failure_template.id, event: event))
+          a data-toggle="tab" href="#backtrace" Backtrace
+        li
+          a data-toggle="tab" href="#params" Params
+        li
+          a data-toggle="tab" href="#headers" Headers
+        li
+          a data-toggle="tab" href="#session" Session
+        li
+          a data-toggle="tab" href="#context" Context
+        li
+          a data-toggle="tab" href="#similar" Similar Errors
+    .tab-content
+      #summary.tab-pane.in.active
+        h3 Summary
+        .summary_item
+          pre = @server_failure_info.exception
+        .summary_item
+          = link @server_failure_info.server, to: @server_failure_info.server
+        .summary_item
+          strong
+            ' Request:
+          = @server_failure_info.request
+          '
+          = @server_failure_info.processed_by
+        .summary_item
+          strong
+           ' Host:
+          = @server_failure_info.host
+      #backtrace.tab-pane
+        h3 Backtrace
+        = render "_backtrace.html", conn: @conn, backtrace: @server_failure_info.backtrace
+      #params.tab-pane
+        h3 Params
+        pre
+          = Poison.encode!(@server_failure_info.params)
+      #headers.tab-pane
+        h3 Headers
+        = render "_headers.html", conn: @conn, headers: @server_failure_info.headers
+      #session.tab-pane
+        h3 Session
+        = render "_session.html", conn: @conn, session: @server_failure_info.session
+      #context.tab-pane
+        h3 Context
+        = render "_context.html", conn: @conn, context: @server_failure_info.context
 
-p
-  | It's&nbsp;
-  = if @server_failure_template.assignee do
-    = @server_failure_template.assignee.name
-  - else
-    |noone's
-  |&nbsp;problem.
+      #similar.tab-pane
+        h3 Similar Errors
 
-ul
-  = for serv <- @server_failure_template.server_failures do
-    li = serv.title
-    li = serv.request
-    li = serv.processed_by
-    li = serv.exception
-    li = serv.host
-    li = serv.backtrace
-    li = serv.server
-    li = serv.params
-    li = serv.inserted_at
-    hr
+
+  / = inspect(@server_failure_info.request)

@@ -1,0 +1,6 @@
+ul.list
+  = for {context_key, context_value} <- @context do
+    li style="word-break: break-all"
+      b = context_key
+      ' :
+      = inspect(context_value)

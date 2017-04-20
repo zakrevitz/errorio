@@ -1,0 +1,17 @@
+.project_wrapper
+  h2 Sort
+  #sorts.btn-group
+    button.btn.btn-default.is-checked data-sort-by="original-order"
+      | By id
+    button.btn.btn-default data-sort-by="name"
+      | By name
+    button.btn.btn-default data-sort-by="template"
+      | By template
+    button.btn.btn-default data-sort-by="error_count"
+      | By errors
+  hr
+  .projects_container
+    = for project <- @projects do
+      = render "_project.html", project: project, conn: @conn
+  = if @page.total_pages > 1 do
+    = pagination_links @page

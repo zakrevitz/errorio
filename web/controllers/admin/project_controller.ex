@@ -12,6 +12,25 @@ defmodule Errorio.Admin.ProjectController do
     render(conn, "index.html", projects: projects, current_user: current_user)
   end
 
+  def new(conn, params , current_user, _claims) do
+    changeset = Project.create_changeset(%Project{})
+    render conn, "new.html", current_user: current_user, changeset: changeset, templates: Project.templates
+  end
+
+  def create(conn, %{"project" => project_params}, current_user, _claims) do
+    result = Project.changeset(%Project{}, project_params) |> Repo.insert
+    case result do
+      {:ok, project} ->
+        conn
+        |> put_flash(:info, "Project created successfully.")
+        |> redirect(to: admin_project_path(conn, :index))
+      {:error, changeset} ->
+        conn
+        |> assign(:templates, Project.templates)
+        |> render("new.html", changeset: changeset, current_user: current_user)
+    end
+  end
+
   def show(conn, %{"id" => id}, current_user, _claims) do
     {id, _} = Integer.parse(id)
     case find_resource(id) do

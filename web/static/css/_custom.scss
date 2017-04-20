@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .fa {
   &.green {
     color: #5cb85c;
@@ -52,4 +56,58 @@ nav.login-bar {
   > ul.nav {
     line-height: 34px;
   }
+}
+.top-nav>.open>.dropdown-menu>li>form>a {
+  white-space: normal;
+}
+.dropdown-menu>li>form>a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+
+.dropdown-menu>li>form>a:focus, .dropdown-menu>li>form>a:hover {
+  color: #262626;
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+
+.logo {
+  text-align: center;
+}
+
+.navbar-brand > img {
+  display: inline-block;
+  max-height: 30px;
+}
+
+.project_item {
+  position: relative;
+  float: left;
+  margin: 5px;
+  padding: 10px;
+  width: 100%;
+  background-color: #ccc;
+}
+
+.server_failure_item {
+  position: relative;
+  float: left;
+  margin: 5px;
+  padding: 10px;
+  width: 300px;
+  background-color: #ccc;
+}
+
+@media only screen and (max-width: 768px) {
+  .server_failure_item {
+    width: 100%;
+  }
+}
+ul.list {
+  list-style: none;
 }
