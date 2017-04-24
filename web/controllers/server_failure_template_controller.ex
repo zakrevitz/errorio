@@ -107,8 +107,7 @@ defmodule Errorio.ServerFailureTemplateController do
       |> where([sf], sf.server_failure_template_id == ^id)
       |> order_by(desc: :updated_at)
       |> limit(1)
-      |> Repo.all
-      |> List.first
+      |> Repo.one
   end
 
   defp fitler_project(changeset, nil), do: changeset

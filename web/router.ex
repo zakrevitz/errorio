@@ -81,7 +81,7 @@ defmodule Errorio.Router do
     # pipe_through [:api, :api_auth]
     pipe_through [:api]
     scope "/v1", V1, as: :v1 do
-      resources "/server_failures", ServerFailureTemplateController
+      resources "/server_failures", ServerFailureTemplateController, only: [:create]
     end
   end
 end

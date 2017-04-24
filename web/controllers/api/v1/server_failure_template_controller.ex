@@ -4,10 +4,10 @@ defmodule Errorio.Api.V1.ServerFailureTemplateController do
   alias Errorio.ServerFailureTemplate
   alias Errorio.Project
 
-  def index(conn, _params) do
-    server_failure_templates = Repo.all(ServerFailureTemplate)
-    render(conn, "index.json", server_failure_templates: server_failure_templates)
-  end
+  # def index(conn, _params) do
+  #   server_failure_templates = Repo.all(ServerFailureTemplate)
+  #   render(conn, "index.json", server_failure_templates: server_failure_templates)
+  # end
 
   def create(conn, %{"server_failure" => server_failure_params, "token" => project_key}) do
     case find_project(project_key) do
@@ -15,8 +15,7 @@ defmodule Errorio.Api.V1.ServerFailureTemplateController do
           {:ok, server_failure} ->
             conn
             |> put_status(:created)
-            |> put_resp_header("location", api_v1_server_failure_template_path(conn, :show, server_failure))
-            |> render("show.json", server_failure_template: server_failure)
+            |> render("server_failure.json", server_failure: server_failure)
           {:error, changeset} ->
             conn
             |> put_status(:unprocessable_entity)

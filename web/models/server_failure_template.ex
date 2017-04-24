@@ -121,7 +121,7 @@ defmodule Errorio.ServerFailureTemplate do
         in_progress: fragment("count(case when state = 'in_progress' then 1 else null end)"),
         reopened: fragment("count(case when state = 'reopened' then 1 else null end)")
       }
-    ) |> Errorio.Repo.all |> List.first
+    ) |> Errorio.Repo.one
   end
 
   defp generate_info(old, new, name) do
