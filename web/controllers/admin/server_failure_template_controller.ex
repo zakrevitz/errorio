@@ -10,7 +10,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
   plug EnsureAuthenticated, [key: :admin, handler: __MODULE__]
 
   def index(conn, _params, current_user, _claims) do
-    server_failures = Repo.all(ServerFailureTemplate) |> Repo.preload([:project])
+    server_failures = Repo.all(ServerFailureTemplate) |> Repo.preload([:project, :assignee])
     render(conn, "index.html", server_failures: server_failures, current_user: current_user)
   end
 

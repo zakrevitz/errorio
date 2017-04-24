@@ -1,4 +1,8 @@
 .server_failure_wrapper
+  .btn-group
+    = link 'Show all errors', to: server_failure_template_path(@conn, :index, Map.delete(@conn.params, "sort")), class: 'btn btn-default'
+    = link 'Show only my errors', to: server_failure_template_path(@conn, :index, Map.merge(@conn.params, %{sort: "my"})), class: 'btn btn-default'
+    = link 'Clear filter', to: server_failure_template_path(@conn, :index), class: 'btn btn-default'
   .server_failure_container
     = for serv <- @server_failures do
       = render "_server_failure.html", serv: serv, conn: @conn

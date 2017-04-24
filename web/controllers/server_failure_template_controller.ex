@@ -8,23 +8,17 @@ defmodule Errorio.ServerFailureTemplateController do
 
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
 
-  def index(conn, params = %{"project_id" => project_id}, current_user, _claims) do
-    page =
-      from(ser_tem in ServerFailureTemplate, where: ser_tem.project_id == ^project_id)
-      |> preload(:assignee)
-      |> Repo.paginate(params)
-
-    render conn, :index,
-      server_failures: page.entries,
-      current_user: current_user,
-      page: page
-  end
-
-  def index(conn, _params, current_user, _claims) do
+  def index(conn, params, current_user, _claims) do
+    project_id = Map.get(params, "project_id", nil)
+    sort = Map.get(params, "sort", nil)
+    state = Map.get(params, "state", nil)
     page =
       ServerFailureTemplate
+      |> fitler_project(project_id)
+      |> fitler_sort_by_user(current_user.id, sort)
+      |> fitler_sort_by_state(state)
       |> preload(:assignee)
-      |> Repo.paginate(_params)
+      |> Repo.paginate(params)
 
     render conn, :index,
       server_failures: page.entries,
@@ -115,5 +109,23 @@ defmodule Errorio.ServerFailureTemplateController do
       |> limit(1)
       |> Repo.all
       |> List.first
+  end
+
+  defp fitler_project(changeset, nil), do: changeset
+  defp fitler_project(changeset, project_id), do: changeset |> where([ser_tem], ser_tem.project_id == ^project_id)
+
+  defp fitler_sort_by_user(changeset, user_id, sort) do
+    case sort do
+      "my" -> changeset |> where([ser_tem], ser_tem.user_id == ^user_id)
+      "unassigned" -> changeset |> where([ser_tem], is_nil(ser_tem.user_id))
+      _ -> changeset
+    end
+  end
+
+  defp fitler_sort_by_state(changeset, state) do
+    case state do
+      _state when is_binary(_state) -> changeset |> where([ser_tem], ser_tem.state == ^state)
+      _ -> changeset
+    end
   end
 end

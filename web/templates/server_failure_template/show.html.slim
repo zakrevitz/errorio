@@ -69,10 +69,12 @@
           = Poison.encode!(@server_failure_info.params)
       #headers.tab-pane
         h3 Headers
-        = render "_headers.html", conn: @conn, headers: @server_failure_info.headers
+        = if @server_failure_info.headers do
+          = render "_headers.html", conn: @conn, headers: @server_failure_info.headers
       #session.tab-pane
         h3 Session
-        = render "_session.html", conn: @conn, session: @server_failure_info.session
+        = if @server_failure_info.session do
+          = render "_session.html", conn: @conn, session: @server_failure_info.session
       #context.tab-pane
         h3 Context
         = render "_context.html", conn: @conn, context: @server_failure_info.context

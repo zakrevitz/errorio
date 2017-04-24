@@ -32,4 +32,15 @@ defmodule Errorio.ErrorioHelper do
       false -> str
     end
   end
+
+  def css_class_from_state(state) do
+    case state do
+      "to_do" -> "panel-danger"
+      "reopened" -> "panel-danger"
+      "in_progress" ->  "panel-warning"
+      "to_check" ->  "panel-info"
+      "done" ->  "panel-success"
+      _ -> "panel-primary"
+    end
+  end
 end

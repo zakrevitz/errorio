@@ -8,7 +8,7 @@
           .col-xs-9.text-right
             .huge = @stats[:unresolved]
             div Unresolved Errors
-      = link to: server_failure_template_path(@conn, :index) do
+      = link to: server_failure_template_path(@conn, :index, state: "to_do") do
         .panel-footer
           span.pull-left View Details
           span.pull-right
@@ -24,7 +24,7 @@
           .col-xs-9.text-right
             .huge = @stats[:unassigned]
             div Unassigned Errors
-      a href="#"
+      = link to: server_failure_template_path(@conn, :index, sort: "unassigned") do
         .panel-footer
           span.pull-left View Details
           span.pull-right
@@ -40,7 +40,7 @@
           .col-xs-9.text-right
             .huge = @stats[:in_progress]
             div Errors in progress
-      a href="#"
+      = link to: server_failure_template_path(@conn, :index, state: "in_progress") do
         .panel-footer
           span.pull-left View Details
           span.pull-right
@@ -56,7 +56,7 @@
           .col-xs-9.text-right
             .huge = @stats[:reopened]
             div Reopened Errors
-      a href="#"
+      = link to: server_failure_template_path(@conn, :index, state: "reopened") do
         .panel-footer
           span.pull-left View Details
           span.pull-right

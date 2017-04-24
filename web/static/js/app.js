@@ -40,6 +40,10 @@ $(document).ready(function(){
     }
   });
 
+  $('#sorts btn').click(function(){
+    $(this).siblings().find('.btn.active').re
+  });
+
   var $failure_grid = $('.server_failure_container').isotope({
     itemSelector: '.server_failure_item',
     layoutMode: 'fitRows'
@@ -48,6 +52,8 @@ $(document).ready(function(){
   $('#sorts').on( 'click', 'button', function() {
     var sortByValue = $(this).attr('data-sort-by');
     $project_grid.isotope({ sortBy: sortByValue });
+    $(this).siblings('.active').removeClass('active');
+    $(this).addClass('active')
   });
 });
 

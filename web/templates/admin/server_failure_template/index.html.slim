@@ -7,6 +7,7 @@ table.table.table-hover.table-bordered
       th State
       th Project
       th Last seen at
+      th Assignee
       th Actions
   tbody
     = for server_failure <- @server_failures do
@@ -16,16 +17,24 @@ table.table.table-hover.table-bordered
         td= "#{server_failure.server_failure_count} time(s)"
         td= server_failure.state
         td
-          /= link server_failure.project.name, to: admin_project_path(@conn, :show, server_failure.project.id)
+          = if server_failure.project do
+            = link server_failure.project.name, to: admin_project_path(@conn, :show, server_failure.project.id)
         td= ErrorioHelper.format_date(server_failure.last_time_seen_at)
+        td
+          = if server_failure.assignee do
+            = server_failure.assignee.name
+          - else
+            | —
         td.actions
-          = link "Details", to: admin_server_failure_template_path(@conn, :show, server_failure.id), class: "btn btn-xs btn-info"
+          .btn-group
+            = link "Details", to: admin_server_failure_template_path(@conn, :show, server_failure.id), class: "btn btn-xs btn-info"
+            .btn-group
+              button.btn.btn-primary.btn-xs.dropdown-toggle type="button" data-toggle="dropdown" Events
+                span.caret
+              ul.dropdown-menu
+                = for event <- ServerFailureTemplate.events do
+                  = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [server_failure]) do
+                    li
+                      = link(ErrorioHelper.humanize_atom(event), to: admin_server_failure_template_migrate_path(@conn, :migrate, server_failure.id, event: event))
+
           = link "Delete", to: admin_server_failure_template_path(@conn, :delete, server_failure.id), method: :delete, class: "btn btn-xs btn-danger"
-          .dropdown.admin
-            button.btn.btn-primary.btn-xs.dropdown-toggle type="button" data-toggle="dropdown" Events
-              span.caret
-            ul.dropdown-menu
-              = for event <- ServerFailureTemplate.events do
-                = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [server_failure]) do
-                  li
-                    = link(ErrorioHelper.humanize_atom(event), to: admin_server_failure_template_migrate_path(@conn, :migrate, server_failure.id, event: event))
