@@ -31,6 +31,24 @@ defmodule Errorio.ConnCase do
 
       # The default endpoint for testing
       @endpoint Errorio.Endpoint
+
+      # We need a way to get into the connection to login a user
+      # We need to use the bypass_through to fire the plugs in the router
+      # and get the session fetched.
+      def guardian_login(%Errorio.User{} = user), do: guardian_login(conn(), user, :token, [])
+      def guardian_login(%Errorio.User{} = user, token), do: guardian_login(conn(), user, token, [])
+      def guardian_login(%Errorio.User{} = user, token, opts), do: guardian_login(conn(), user, token, opts)
+
+      def guardian_login(%Plug.Conn{} = conn, user), do: guardian_login(conn, user, :token, [])
+      def guardian_login(%Plug.Conn{} = conn, user, token), do: guardian_login(conn, user, token, [])
+      def guardian_login(%Plug.Conn{} = conn, user, token, opts) do
+        conn
+          |> bypass_through(Errorio.Router, [:browser])
+          |> get("/")
+          |> Guardian.Plug.sign_in(user, token, opts)
+          |> send_resp(200, "Flush the session yo")
+          |> recycle()
+      end
     end
   end
 

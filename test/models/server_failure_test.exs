@@ -1,9 +1,9 @@
 defmodule Errorio.ServerFailureTest do
   use Errorio.ModelCase
-
+  import Errorio.Factory
   alias Errorio.ServerFailure
 
-  @valid_attrs %{backtrace: "some content", exception: "some content", host: "some content", params: "some content", processed_by: "some content", request: "some content", server: "some content", state: 42, title: "some content"}
+  @valid_attrs params_for(:server_failure)
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
