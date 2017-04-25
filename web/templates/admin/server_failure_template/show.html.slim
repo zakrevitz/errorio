@@ -40,5 +40,10 @@ table.table.table-striped.table-bordered
       tr
         td=event.id
         td=event.info
-        td=event.responsible.name
+        td
+          = if event.responsible do
+            =event.responsible.name
+          - else
+            | Automatic
+
         td=event.inserted_at

@@ -14,7 +14,7 @@ defmodule Errorio.EventTransitionLog do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:info])
-    |> validate_required([:info])
+    |> cast(params, [:info, :responsible_id])
+    |> validate_required([:info, :responsible_id])
   end
 end
