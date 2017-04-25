@@ -1,15 +1,14 @@
 defmodule Errorio.ProjectController do
   use Errorio.Web, :controller
   alias Errorio.Project
-  alias Errorio.ErrorioHelper
 
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
 
-  def index(conn, _params, current_user, _claims) do
+  def index(conn, params, current_user, _claims) do
     page =
       Project
       |> preload(:server_failure_templates)
-      |> Repo.paginate(_params)
+      |> Repo.paginate(params)
 
     render conn, :index,
       projects: page.entries,

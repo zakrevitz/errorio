@@ -108,7 +108,7 @@ defmodule Errorio.ServerFailureTemplate do
   end
 
   def update_assignee(server_failure_template, user_id) do
-    result = server_failure_template
+    server_failure_template
     |> assign_changeset(%{user_id: user_id})
     |> Errorio.Repo.update
   end

@@ -1,13 +1,7 @@
 defmodule Errorio.Api.V1.ServerFailureTemplateController do
   use Errorio.Web, :api_controller
 
-  alias Errorio.ServerFailureTemplate
   alias Errorio.Project
-
-  # def index(conn, _params) do
-  #   server_failure_templates = Repo.all(ServerFailureTemplate)
-  #   render(conn, "index.json", server_failure_templates: server_failure_templates)
-  # end
 
   def create(conn, %{"server_failure" => server_failure_params, "token" => project_key}) do
     case find_project(project_key) do

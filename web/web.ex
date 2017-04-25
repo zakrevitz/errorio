@@ -71,7 +71,7 @@ defmodule Errorio.Web do
 
       import Ecto
       import Ecto.Schema
-      import Ecto.Query, only: [from: 1, from: 2]
+      import Ecto.Query
 
       import Errorio.Router.Helpers
       import Errorio.Gettext

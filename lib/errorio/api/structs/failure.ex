@@ -11,7 +11,7 @@ defmodule Errorio.Api.Structs.Failure do
             headers: %{},
             context: %{}
   def new(%{}=params) do
-    struct = prepare_data(params)
+    prepare_data(params)
   end
 
   defp prepare_data(%{}=params) do
@@ -68,5 +68,5 @@ defmodule Errorio.Api.Structs.Failure do
     <> if (data["context"] && Map.has_key?(data["context"], "url")), do: data["context"]["url"], else: ""
   end
 
-  defp fetch_request(_), do: ""
+  # defp fetch_request(_), do: ""
 end

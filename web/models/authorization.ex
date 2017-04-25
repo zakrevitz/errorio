@@ -12,7 +12,7 @@ defmodule Errorio.Authorization do
 
     belongs_to :user, Errorio.User
 
-    timestamps
+    timestamps()
   end
 
   @required_fields ~w(provider uid user_id token)a

@@ -1,5 +1,4 @@
 defmodule Errorio.StateMachine do
-  alias Errorio.Authorization
   alias Errorio.Repo
 
   def migrate(event, element, klass) do
@@ -23,7 +22,7 @@ defmodule Errorio.StateMachine do
   end
 
   defp migrate_element(event, element, klass) do
-    migrated_element = apply(klass, event, [element])
+    apply(klass, event, [element])
     |> Repo.update
   end
 end

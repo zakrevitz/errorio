@@ -3,7 +3,7 @@ defmodule Errorio.ServerFailureTemplateController do
   alias Errorio.ServerFailureTemplate
   alias Errorio.ErrorioHelper
   alias Errorio.StateMachine
-  alias Errorio.Statistic.ServerFailure, as: ServerFailureStats
+  # alias Errorio.Statistic.ServerFailure, as: ServerFailureStats
   alias Errorio.ServerFailure, as: ServerFailure
 
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
@@ -59,9 +59,9 @@ defmodule Errorio.ServerFailureTemplateController do
             conn
             |> put_flash(:info, "Yep, we changed state ^_^")
             |> redirect(to: server_failure_template_path(conn, :show, server_failure_template.id))
-          {:error, _reason} ->
+          {:error, reason} ->
             conn
-            |> put_flash(:error, "Could not migrate. Error: #{ErrorioHelper.humanize_atom(_reason)}")
+            |> put_flash(:error, "Could not migrate. Error: #{ErrorioHelper.humanize_atom(reason)}")
             |> redirect(to: server_failure_template_path(conn, :index))
         end
     end
@@ -82,9 +82,9 @@ defmodule Errorio.ServerFailureTemplateController do
             conn
             |> put_flash(:info, "Not it is officially your problem")
             |> redirect(to: server_failure_template_path(conn, :show, server_failure_template.id))
-          {:error, _reason} ->
+          {:error, reason} ->
             conn
-            |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(_reason)}")
+            |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(reason)}")
             |> redirect(to: server_failure_template_path(conn, :index))
         end
     end
@@ -123,7 +123,7 @@ defmodule Errorio.ServerFailureTemplateController do
 
   defp fitler_sort_by_state(changeset, state) do
     case state do
-      _state when is_binary(_state) -> changeset |> where([ser_tem], ser_tem.state == ^state)
+      st when is_binary(st) -> changeset |> where([ser_tem], ser_tem.state == ^state)
       _ -> changeset
     end
   end

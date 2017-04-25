@@ -9,7 +9,7 @@ defmodule Errorio.User do
     field :is_admin, :boolean
 
     has_many :authorizations, Errorio.Authorization
-    timestamps
+    timestamps()
   end
 
   @required_fields ~w(email name)a

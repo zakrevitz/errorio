@@ -38,3 +38,6 @@ table.table.table-hover.table-bordered
                       = link(ErrorioHelper.humanize_atom(event), to: admin_server_failure_template_migrate_path(@conn, :migrate, server_failure.id, event: event))
 
           = link "Delete", to: admin_server_failure_template_path(@conn, :delete, server_failure.id), method: :delete, class: "btn btn-xs btn-danger"
+
+= if @page.total_pages > 1 do
+  = pagination_links @page

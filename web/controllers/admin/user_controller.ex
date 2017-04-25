@@ -17,7 +17,7 @@ defmodule Errorio.Admin.UserController do
     render conn, "index.html", users: users, current_user: current_user
   end
 
-  def new(conn, params, current_user, _claims) do
+  def new(conn, _params, current_user, _claims) do
     render conn, "new.html", current_user: current_user
   end
 
@@ -30,13 +30,13 @@ defmodule Errorio.Admin.UserController do
 
   def callback(%Plug.Conn{assigns: %{ueberauth_auth: auth}} = conn, _params, current_user, _claims) do
     case UserFromAuth.admin_insert_new_user(auth, Repo) do
-      {:ok, user} ->
+      {:ok, _user} ->
         conn
         |> put_flash(:info, "User successfully created!")
         |> redirect(to: admin_user_path(conn, :index))
-      {:error, _reason} ->
+      {:error, reason} ->
         conn
-        |> put_flash(:error, "Could not create. Error: #{ErrorioHelper.humanize_atom(_reason)}")
+        |> put_flash(:error, "Could not create. Error: #{ErrorioHelper.humanize_atom(reason)}")
         |> render("new.html", current_user: current_user)
     end
   end
@@ -52,18 +52,18 @@ defmodule Errorio.Admin.UserController do
     |> Repo.get!(id)
     |> Repo.preload(:authorizations)
     case UserFromAuth.admin_update_user(user, user_params, auth_params, Repo) do
-      {:ok, result} ->
+      {:ok, _result} ->
         conn
         |> put_flash(:info, "User updated successfully!")
         |> redirect(to: admin_user_path(conn, :index))
-      {:error, _reason} ->
+      {:error, reason} ->
         conn
-        |> put_flash(:error, "Could not update. Error: #{ErrorioHelper.humanize_atom(_reason)}")
+        |> put_flash(:error, "Could not update. Error: #{ErrorioHelper.humanize_atom(reason)}")
         |> render("edit.html", current_user: current_user, user: user)
     end
   end
 
-  def delete(conn, %{"id" => id}, current_user, _claims) do
+  def delete(conn, %{"id" => id}, _current_user, _claims) do
     {id, _} = Integer.parse(id)
     result = User
     |> Repo.get!(id)
@@ -72,11 +72,11 @@ defmodule Errorio.Admin.UserController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User ID:#{id} (#{user.email}) successfully deleted!")
-        |> redirect to: admin_user_path(conn, :index)
-      {:error, _reason} ->
+        |> redirect(to: admin_user_path(conn, :index))
+      {:error, reason} ->
         conn
-        |> put_flash(:error, "Could not delete. Error: #{ErrorioHelper.humanize_atom(_reason)}")
-        |> redirect to: admin_user_path(conn, :index)
+        |> put_flash(:error, "Could not delete. Error: #{ErrorioHelper.humanize_atom(reason)}")
+        |> redirect(to: admin_user_path(conn, :index))
     end
   end
 

@@ -36,14 +36,14 @@ defmodule Errorio.UserFromAuth do
           case result_user do
             {:ok, user} ->
               authorization = repo.get_by(Authorization, uid: initial_user.email, provider: "identity")
-              result = Authorization.changeset(
+              Authorization.changeset(
                 authorization,
                 scrub(
                   %{uid: user.email, token: token_from_auth_params(auth_params, authorization.token)}
                 )
               ) |> repo.update
               {:ok, user}
-            {:error, reason} -> repo.rollback(:email_already_exists)
+            {:error, _reason} -> repo.rollback(:email_already_exists)
           end
         {:error, reason} ->
           repo.rollback(reason)
@@ -55,6 +55,7 @@ defmodule Errorio.UserFromAuth do
         {:error, reason}
     end
   end
+
 
   # We need to check the pw for the identity provider
   defp validate_auth_for_registration(%Auth{provider: :identity} = auth) do
@@ -73,6 +74,9 @@ defmodule Errorio.UserFromAuth do
     end
   end
 
+  # All the other providers are oauth so should be good
+  defp validate_auth_for_registration(auth), do: :ok
+
   defp validate_update_password(pw, pwc, email) do
     case pw do
       ^pwc ->
@@ -82,8 +86,6 @@ defmodule Errorio.UserFromAuth do
     end
   end
 
-  # All the other providers are oauth so should be good
-  defp validate_auth_for_registration(auth), do: :ok
 
   defp validate_pw_length(pw, email) when is_binary(pw) do
     if String.length(pw) >= 8 || String.length(pw) == 0 do
@@ -146,6 +148,7 @@ defmodule Errorio.UserFromAuth do
 
   defp create_user_from_auth(auth, current_user, repo) do
     user = current_user
+
     # if !user, do: user = repo.get_by(User, email: auth.info.email)
     if !user, do: user = create_user(auth, repo)
     authorization_from_auth(user, auth, repo)
@@ -158,7 +161,7 @@ defmodule Errorio.UserFromAuth do
     |> repo.insert
     case result do
       {:ok, user} -> user
-      {:error, reason} -> repo.rollback(:email_already_exists)
+      {:error, _reason} -> repo.rollback(:email_already_exists)
     end
   end
 
@@ -270,8 +273,8 @@ defmodule Errorio.UserFromAuth do
   # We don't have any nested structures in our params that we are using scrub with so this is a very simple scrub
   defp scrub(params) do
     result = Enum.filter(params, fn
-      {key, val} when is_binary(val) -> String.strip(val) != ""
-      {key, val} when is_nil(val) -> false
+      {_key, val} when is_binary(val) -> String.strip(val) != ""
+      {_key, val} when is_nil(val) -> false
       _ -> true
     end)
     |> Enum.into(%{})

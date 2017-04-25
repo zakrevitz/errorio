@@ -51,7 +51,6 @@ defmodule Errorio.Api.ServerFailure.Builder do
   end
 
   defp find_server_failure_template(template_struct) do
-    # hash = generate_md5_hash(server_failure_params)
     case Repo.get_by(ServerFailureTemplate, md5_hash: template_struct.md5_hash) do
       nil ->
         create_server_failure_template(template_struct)
@@ -61,10 +60,6 @@ defmodule Errorio.Api.ServerFailure.Builder do
   end
 
   defp generate_md5_hash(failure_struct) do
-    # hash_string = if is_map(server_failure_params["errors"]), do: server_failure_params["errors"]["type"], else: "StandartError"
-    # <> if is_map(server_failure_params["context"]), do: server_failure_params["context"]["hostname"], else: "undefined_host"
-    # <> if is_map(server_failure_params["context"]), do: server_failure_params["context"]["site_name"], else: "undefined_site_name"
-    # <> fetch_filename_from_backtrace(server_failure_params["errors"])
     hash_string = failure_struct.title <> failure_struct.host <> failure_struct.server <> fetch_filename_from_backtrace(failure_struct.backtrace) <> failure_struct.exception
     :crypto.hash(:md5, hash_string) |> Base.encode16(case: :lower)
   end
@@ -76,8 +71,5 @@ defmodule Errorio.Api.ServerFailure.Builder do
     else
       ""
     end
-    # [head|_] = String.split(backtrace, "\n", parts: 2)
-    # String.split(head, "/")
-    # |> Enum.at(-1)
   end
 end
