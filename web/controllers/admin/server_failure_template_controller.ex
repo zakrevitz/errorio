@@ -40,7 +40,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
         |> redirect(to: admin_server_failure_template_path(conn, :index))
       server_failure_template ->
         result = StateMachine.migrate(String.to_atom(event), server_failure_template, Errorio.ServerFailureTemplate)
-        |> ServerFailureTemplate.assign(current_user)
+        |> ServerFailureTemplate.log_transition(server_failure_template, current_user)
         case result do
           {:ok, _server_failure_template} ->
             conn
@@ -49,6 +49,28 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
           {:error, reason} ->
             conn
             |> put_flash(:error, "Could not migrate. Error: #{ErrorioHelper.humanize_atom(reason)}")
+            |> redirect(to: admin_server_failure_template_path(conn, :index))
+        end
+    end
+  end
+
+  def assign(conn, %{"server_failure_template" => params, "server_failure_template_id" => id}, _current_user, _claims) do
+    {id, _} = Integer.parse(id)
+    case find_resource(id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Oops, something gone wrong")
+        |> redirect(to: admin_server_failure_template_path(conn, :index))
+      server_failure_template ->
+        result = server_failure_template
+        |> ServerFailureTemplate.update_assignee(params["assignee_id"])
+        case result do
+          {:ok, server_failure_template} ->
+            conn
+            |> render("assign.json", server_failure_template: server_failure_template)
+          {:error, reason} ->
+            conn
+            |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(reason)}")
             |> redirect(to: admin_server_failure_template_path(conn, :index))
         end
     end
@@ -78,9 +100,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
   end
 
   defp find_resource(id) do
-    result = ServerFailureTemplate
+    ServerFailureTemplate
     |> Repo.get(id)
-
-    result
   end
 end

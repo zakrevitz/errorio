@@ -19,42 +19,11 @@ import "phoenix_html"
 
 // import socket from "./socket"
 import "./bootstrap.min"
+import "./bootstrap-editable.min"
+import Global from "./global"
 
-$(document).ready(function(){
-  $('[data-toggle="popover"]').popover();
-  var $project_grid = $('.projects_container').isotope({
-    itemSelector: '.project_item',
-    layoutMode: 'vertical',
-    sortAscending: {
-      name: true,
-      template: true,
-      error_count: false
-    },
-    getSortData: {
-      template: '.template',
-      error_count: '.error_count parseInt',
-      name: function( itemElem ) {
-        var name = $( itemElem ).find('.name').text();
-        return name.toLowerCase();
-      }
-    }
-  });
-
-  $('#sorts btn').click(function(){
-    $(this).siblings().find('.btn.active').re
-  });
-
-  var $failure_grid = $('.server_failure_container').isotope({
-    itemSelector: '.server_failure_item',
-    layoutMode: 'fitRows'
-  });
-
-  $('#sorts').on( 'click', 'button', function() {
-    var sortByValue = $(this).attr('data-sort-by');
-    $project_grid.isotope({ sortBy: sortByValue });
-    $(this).siblings('.active').removeClass('active');
-    $(this).addClass('active')
-  });
-});
+$(document).ready(function() {
+  window.Global = new Global()
+})
 
 $(document).off('click.bs.dropdown.data-api', '.dropdown form');

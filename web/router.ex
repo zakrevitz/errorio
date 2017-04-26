@@ -72,9 +72,15 @@ defmodule Errorio.Router do
     resources "/users", UserController
     resources "/server_failures", ServerFailureTemplateController do
       get "/migrate", ServerFailureTemplateController, :migrate, as: :migrate
+      post "/assign", ServerFailureTemplateController, :assign, as: :assign
     end
     resources "/projects", ProjectController
     post "/users/:identity/callback", UserController, :callback
+
+    scope "/remote" do
+      pipe_through [:api]
+      get "/users", UserController, :index
+    end
   end
 
   scope "/api", Errorio.Api, as: :api do

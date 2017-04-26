@@ -3,13 +3,20 @@
     h3.panel-title = @serv.title
   .panel-body
     = if @serv.assignee do
-      span = @serv.assignee.name
+      span
+        b
+          ' Assignee:
+        = @serv.assignee.name
+    - else
+      b
+        | Noone assigned!
     .occurrences
       = link "Occurrences: #{@serv.server_failure_count} time(s).", to: server_failure_template_path(@conn, :show, @serv.id)
     / p = "#{@serv.processed_by |> String.slice(0, 45)}..."
     p =ErrorioHelper.truncate_string(@serv.processed_by, 45, "...")
-    span class="#{@serv.state}"
-      = ErrorioHelper.humanize_atom(@serv.state)
+    .state
+      span class="label #{@serv.state}"
+        = ErrorioHelper.humanize_atom(@serv.state)
     .date_time
       a.time href="#" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@serv.inserted_at)}"
          = "First time seen: #{ErrorioHelper.format_date_relative(@serv.inserted_at)}"

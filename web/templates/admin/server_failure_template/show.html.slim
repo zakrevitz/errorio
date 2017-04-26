@@ -10,12 +10,13 @@ h1 = @server_failure_template.title
 
 p
   | It's&nbsp;
-  = if @server_failure_template.assignee do
-    = @server_failure_template.assignee.name
-  - else
-    |noone's
+  a#assignee_id href="#" data-type="select" data-url="/admin/server_failures/#{@server_failure_template.id}/assign" data-title="Select assignee"
+    = if @server_failure_template.assignee do
+      = @server_failure_template.assignee.name
+    - else
+      |noone's
   |&nbsp;problem.
-
+/ a#assignee href="#"
 ul
   = for serv <- @server_failure_template.server_failures do
     li = serv.title

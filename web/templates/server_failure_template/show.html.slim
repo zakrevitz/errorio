@@ -2,9 +2,9 @@
   .server_failure_content_header
     .title
       h1 = @server_failure_template.title
-      .date_time
-        a.time href="javascript:void(0)" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@server_failure_template.last_time_seen_at)}"
-           = "Last time seen: #{ErrorioHelper.format_date_relative(@server_failure_template.last_time_seen_at)}"
+    .date_time
+      a.time href="javascript:void(0)" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@server_failure_template.last_time_seen_at)}"
+         = "Last time seen: #{ErrorioHelper.format_date_relative(@server_failure_template.last_time_seen_at)}"
     .actions
       .btn-group
         = if ServerFailureTemplate.can_assign?(@server_failure_template, @current_user.id) do
@@ -42,7 +42,9 @@
         li
           a data-toggle="tab" href="#context" Context
         li
-          a data-toggle="tab" href="#similar" Similar Errors
+          a data-toggle="tab" href="#similar"
+            ' Similar Errors
+            = "(#{@server_failure_template.server_failure_count})"
     .tab-content
       #summary.tab-pane.in.active
         h3 Summary
@@ -81,6 +83,7 @@
 
       #similar.tab-pane
         h3 Similar Errors
+        p COMING SOON...
 
 
   / = inspect(@server_failure_info.request)

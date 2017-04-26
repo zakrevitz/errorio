@@ -14,7 +14,7 @@ defmodule Errorio.Admin.UserController do
 
   def index(conn, _params, current_user, _claims) do
     users = Repo.all(User)
-    render conn, "index.html", users: users, current_user: current_user
+    render conn, :index, users: users, current_user: current_user
   end
 
   def new(conn, _params, current_user, _claims) do

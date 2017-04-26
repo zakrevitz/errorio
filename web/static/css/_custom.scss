@@ -119,3 +119,32 @@ ul.list {
   font-size: 20px;
   font-weight: bold;
 }
+
+.content.server_failure {
+  .responsible {
+    margin: 10px 0;
+  }
+  .date_time {
+    margin: 10px 0;
+  }
+}
+
+.server_failure_item {
+  .state {
+    margin: 10px 0;
+  }
+  span.label {
+    &.done {
+      background-color: #5cb85c;
+    }
+    &.in_progress {
+      background-color: #f0ad4e;
+    }
+    &.to_check {
+      background-color: #5bc0de;
+    }
+    &.reopened, &.to_do{
+      background-color: #d9534f;
+    }
+  }
+}
