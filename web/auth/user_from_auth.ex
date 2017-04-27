@@ -88,7 +88,7 @@ defmodule Errorio.UserFromAuth do
 
 
   defp validate_pw_length(pw, email) when is_binary(pw) do
-    if String.length(pw) >= 8 || String.length(pw) == 0 do
+    if String.length(pw) >= 8 do
       validate_email(email)
     else
       {:error, :password_length_is_less_than_8}
@@ -103,6 +103,8 @@ defmodule Errorio.UserFromAuth do
         :ok
     end
   end
+
+  defp validate_email(email), do: {:error, :invalid_email}
 
   defp register_user_from_auth(auth, current_user, repo) do
     case validate_auth_for_registration(auth) do

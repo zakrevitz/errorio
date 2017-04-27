@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-.fa {
+[class*=" icmn-"], [class^=icmn-] {
   &.green {
     color: #5cb85c;
   }
@@ -10,8 +10,8 @@
     color: #c9302c;
   }
 }
-.admin-actions {
-  margin: 10px 0;
+.admin-actions > form {
+  display: inline-block;
 }
 h1.admin {
   display: inline-block;
@@ -147,4 +147,20 @@ ul.list {
       background-color: #d9534f;
     }
   }
+}
+
+
+.btn.btn-no-outline, .open > .btn.btn-no-outline {
+  border: none;
+}
+.inline-actions {
+  margin-top: 5px;
+  text-align: center;
+  button.btn {
+    margin-bottom: 0px;
+  }
+}
+
+span.help-block {
+  color: #fb434a;
 }

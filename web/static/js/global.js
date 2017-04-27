@@ -4,9 +4,10 @@ class Global {
   }
 
   init() {
-    this.isotopeInit()
+    // this.isotopeInit()
     this.popoverInit()
     this.editableInit()
+    this.showPasswordInit()
   }
 
   isotopeInit() {
@@ -50,6 +51,7 @@ class Global {
   }
 
   editableInit() {
+    $.fn.editableform.buttons = '<div class="inline-actions"><button type="submit" class="btn btn-icon btn-sm btn-success-outline margin-inline editable-submit"><i class="icmn-checkmark" aria-hidden="true"></i></button><button type="button" class="btn btn-icon btn-sm btn-info-outline margin-inline editable-cancel"><i class="icmn-cross" aria-hidden="true"></i></button></div>';
     var csrf = document.querySelector("meta[name=csrf]").content;
 
     $('#assignee_id').editable({
@@ -65,6 +67,13 @@ class Global {
         }
       },
       pk: 1
+    });
+  }
+  showPasswordInit() {
+    $('.show_password').password({
+        eyeClass: '',
+        eyeOpenClass: 'icmn-eye',
+        eyeCloseClass: 'icmn-eye-blocked'
     });
   }
 }
