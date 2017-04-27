@@ -1,0 +1,27 @@
+.single-page-block-header
+  .row
+    .col-lg-4
+      .logo
+        a href="javascript: history.back();"
+          img src="#{static_path(@conn, "/images/logo_horisontal.png")}"
+.single-page-block
+  .row
+    .col-xl-12
+      .single-page-block-inner
+        .single-page-block-form
+          h3.text-center
+            i.icmn-enter.margin-right-10
+            | Login
+          br
+          = if not Enum.member?(@current_auths, "identity") do
+            = form_tag auth_path(@conn, :callback, "identity"), method: "post", class: "login", novalidate: true do
+              .form-group
+                label.form-label for='email-input' Email
+                input.form-control type='email' name='email' value="<%= @conn.params['email'] %>" required=""
+
+              .form-group
+                label.form-label Password
+                input.form-control.show_password type='password' name='password' required=""
+
+              .form-actions
+                button.btn.btn-primary.width-150 Sign in

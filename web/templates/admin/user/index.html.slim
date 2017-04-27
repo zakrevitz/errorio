@@ -1,25 +1,44 @@
-.row.pull-right.admin-actions
-  = link "Create new", to: admin_user_path(@conn, :new), class: "btn btn-info"
-table.table.table-hover.table-bordered
-  thead
-    tr
-      th ID
-      th Name
-      th Email
-      th Admin?
-      th Actions
-  tbody
-    = for user <- @users do
-      tr
-        td= user.id
-        td= user.name
-        td= user.email
-        td
-          = if user.is_admin do
-            i.fa.fa-check.fa-lg.green
-          - else
-            i.fa.fa-close.fa-lg.red
-        td.actions
-          = link "Impersonate", to: admin_impersonation_path(@conn, :impersonate, to_string(user.id)), method: :post, class: "btn btn-xs btn-warning"
-          = link "Update", to: admin_user_path(@conn, :edit, user.id), class: "btn btn-xs btn-info"
-          = link "Delete", to: admin_user_path(@conn, :delete, user.id), method: :delete, class: "btn btn-xs btn-danger"
+section.panel.panel-with-borders
+  .panel-heading
+    h2
+      .pull-right.admin-actions
+        = link "Create new", to: admin_user_path(@conn, :new), class: "btn btn-info"
+      | Users
+  .panel-body
+    table.table.table-hover.nowrap
+      thead.thead-default
+        tr
+          th ID
+          th Name
+          th Email
+          th Admin?
+          th Actions
+      tfoot
+        tr
+          th ID
+          th Name
+          th Email
+          th Admin?
+          th Actions
+
+      tbody
+        = for user <- @users do
+          tr
+            td= user.id
+            td= user.name
+            td= user.email
+            td
+              = if user.is_admin do
+                i.icmn-checkmark.green
+              - else
+                i.icmn-cross2.fa-lg.red
+            td.admin-actions
+              = link to: admin_impersonation_path(@conn, :impersonate, to_string(user.id)), method: :post, class: "link-underlined margin-right-15" do
+                i.icmn-enter
+                |  Impersonate
+              = link to: admin_user_path(@conn, :edit, user.id), class: "link-underlined margin-right-15" do
+                i.icmn-database-edit
+                |  Edit
+              = link to: admin_user_path(@conn, :delete, user.id), method: :delete, class: "link-underlined" do
+                i.icmn-cross
+                |  Delete

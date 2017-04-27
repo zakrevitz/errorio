@@ -1,16 +1,26 @@
-h1 Create new User
-= form_tag admin_user_path(@conn, :callback, "identity"), [method: "POST", novalidate: true] do
-  .form-group
-    label.control-label for="email-input"  Email
-    input.form-control name="email" required="" type="email"
-  .form-group
-    label.control-label for="name-input"  Name
-    input.form-control name="name" required=""
-  .form-group
-    label.control-label for="password-input"  Password
-    input.form-control name="password" required="" type="password"
-  .form-group
-    label.control-label for="password-confirmation-input"  Password confirmation
-    input.form-control name="password_confirmation" required="" type="password"
-  .form-group
-    button.btn.btn-primary Create
+section.panel.panel-with-borders
+  .panel-heading
+    h2 Create new User
+  .panel-body
+    = form_tag admin_user_path(@conn, :callback, "identity"), [method: "POST", novalidate: true] do
+      .row
+        .col-lg-6
+          .form-group
+            label.control-label for="email-input"  Email
+            input.form-control name="email" required="" type="email"
+        .col-lg-6
+          .form-group
+            label.control-label for="name-input"  Name
+            input.form-control name="name" required=""
+      .row
+        .col-lg-6
+          .form-group
+            label.control-label for="password-input"  Password
+            input.form-control name="password" required="" type="password"
+        .col-lg-6
+          .form-group
+            label.control-label for="password-confirmation-input"  Password confirmation
+            input.form-control name="password_confirmation" required="" type="password"
+      .form-actions
+        .form-group
+          button.btn.btn-primary Create

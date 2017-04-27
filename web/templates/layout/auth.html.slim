@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
     <%= if Guardian.Plug.current_token(@conn) do %>
       <meta name="guardian_token" content="<%= Guardian.Plug.current_token(@conn) %>">
     <% end %>
@@ -14,13 +15,10 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
-  <body style="background-color: #fff">
-    <div class="logo">
-      <img src='<%= static_path(@conn, "/images/logo.png") %>'>
-    </div>
-    <main role="main">
-      <%= render @view_module, @view_template, assigns %>
-    </main>
+  body.theme-default style="background-image: url(#{static_path(@conn, "/images/login-background.jpg")})"
+    .page-content-inner.single-page-login-alpha
+      = render @view_module, @view_template, assigns
+
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
   </body>

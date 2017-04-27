@@ -1,16 +1,27 @@
-h1 "Edit #{@user.name}"
-= form_tag admin_user_path(@conn, :update, @user.id), [method: "PATCH", novalidate: true] do
-  .form-group
-    label.control-label for="email-input"  Email
-    input.form-control name="user[email]" required="" type="email" value="#{@user.email}"
-  .form-group
-    label.control-label for="name-input"  Name
-    input.form-control name="user[name]" required="" value="#{@user.name}"
-  .form-group
-    label.control-label for="password-input"  Password
-    input.form-control name="auth[password]" required="" type="password"
-  .form-group
-    label.control-label for="password-confirmation-input"  Password confirmation
-    input.form-control name="auth[password_confirmation]" required="" type="password"
-  .form-group
-    button.btn.btn-primary Update
+section.panel.panel-with-borders
+  .panel-heading
+    h2 = "Edit #{@user.name}"
+  .panel-body
+
+    = form_tag admin_user_path(@conn, :update, @user.id), [method: "PATCH", novalidate: true] do
+      .row
+        .col-lg-6
+          .form-group
+            label.control-label for="email-input"  Email
+            input.form-control name="user[email]" required="" type="email" value="#{@user.email}"
+        .col-lg-6
+          .form-group
+            label.control-label for="name-input"  Name
+            input.form-control name="user[name]" required="" value="#{@user.name}"
+      .row
+        .col-lg-6
+          .form-group
+            label.control-label for="password-input"  Password
+            input.form-control.show_password name="auth[password]" required="" type="password"
+        .col-lg-6
+          .form-group
+            label.control-label for="password-confirmation-input"  Password confirmation
+            input.form-control.show_password name="auth[password_confirmation]" required="" type="password"
+      .form-actions
+        .form-group
+          button.btn.width-150.btn-primary Update

@@ -1,1 +1,13 @@
-= @project.name
+section.panel.panel-with-borders
+  .panel-heading
+    h2 = @project.name
+  .panel-body
+    dl.dl-horizontal
+      dt API key
+      dd = @project.api_key
+      dt Template
+      dd = @project.template
+      dt Created at
+      dd = = ErrorioHelper.format_date(@project.inserted_at)
+      dt Updated at
+      dd = = ErrorioHelper.format_date(@project.updated_at)

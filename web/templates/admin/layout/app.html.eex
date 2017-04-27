@@ -9,30 +9,47 @@
     <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
     <title>Admin - Phoenix Guardian</title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/admin_app.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
-  <body style="background-color: #fff">
-    <div class="container-fluid" role="main">
-      <div class="header">
-        <h1 class="admin">Admin place</h1>
-        <ul class="nav nav-pills pull-right btn-group-xs">
-          <%= render "login_bar.html", current_user: @current_user, conn: @conn %>
+  <body class="theme-dark menu-static colorful-disabled mode-squared">
+    <nav class="left-menu">
+      <div class="logo-container"><a href="/" class="logo">
+        <img class="logo-inverse" src='<%= static_path(@conn, "/images/logo_horisontal.png") %>'/></a></div>
+      <div class="left-menu-inner">
+        <ul class="left-menu-list left-menu-list-root list-unstyled">
+          <%= if @current_user do %>
+            <%= render "navigation.html", current_user: @current_user, conn: @conn %>
+          <% else %>
+            <p class="alert alert-warning" role="alert">Not logged in</p>
+          <% end %>
         </ul>
       </div>
-
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= if @current_user do %>
-        <%= render "navigation.html", current_user: @current_user, conn: @conn %>
-      <% else %>
-        <p class="alert alert-warning" role="alert">Not logged in</p>
-      <% end %>
-
-      <%= render @view_module, @view_template, assigns %>
-
-    </div> <!-- /container -->
+    </nav>
+    <nav class="top-menu">
+      <div class="menu-icon-container hidden-md-up">
+        <div class="animate-menu-button left-menu-toggle">
+            <div><!-- --></div>
+        </div>
+      </div>
+      <div class="menu">
+        <div class="menu-user-block">
+            <%= render "login_bar.html", current_user: @current_user, conn: @conn %>
+        </div>
+        <div class="menu-info-block">
+          <div class="left">
+            <h1>Admin place</h1>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <section class="page-content">
+      <div class="page-content-inner">
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+        <%= render @view_module, @view_template, assigns %>
+      </div>
+    </section>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>

@@ -1,0 +1,16 @@
+section.panel.panel-with-borders
+  .panel-heading
+    h2 Admin Login
+  .panel-body
+    = form_tag admin_session_path(@conn, :callback, "identity"), method: "post", class: "login" do
+      .form-group
+        label.control-label for="email-input" Email
+        input.form-control type="email" name="email" value="<%= @conn.params['email'] %>" required=""
+
+      .form-group
+        label.control-label for="password-input" Password
+        input.form-control type="password" name="password" required=""
+
+      .form.actions
+        .form-group
+          button.btn.btn-primary Login

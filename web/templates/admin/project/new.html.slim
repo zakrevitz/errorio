@@ -1,28 +1,19 @@
-h1 Create new Project
-/ = form_tag admin_project_path(@conn, :new), [method: "POST"] do
-/   .form-group
-/     label.control-label for="name-input"  Email
-/     input.form-control name="name" required="" type="name"
-/   .form-group
-/     label.control-label for="template-input"  Template
-/     input.form-control name="template" required=""
-
-/   .form-group
-/     label.control-label for="api_key-input"  Api Key
-/     input.form-control name="api_key" required=""
-/   .form-group
-/     button.btn.btn-primary Create
-= form_for @changeset, admin_project_path(@conn, :create), fn f ->
-  .form-group
-    label.control-label
-      | Name:
-    = text_input f, :name, class: "form-control"
-  .form-group
-    label.control-label
-      | Template:
-    = select f, :template, @templates, class: "form-control"
-  .form-group
-    label.control-label
-      | Api Key:
-    = text_input f, :api_key, class: "form-control"
-  = submit "Create", class: "btn btn-primary"
+section.panel.panel-with-borders
+  .panel-heading
+    h2 Create new Project
+  .panel-body
+    = form_for @changeset, admin_project_path(@conn, :create), fn f ->
+      .form-group
+        label.control-label
+          | Name:
+        = text_input f, :name, class: "form-control"
+        = error_tag f, :name
+      .form-group
+        label.control-label
+          | Template:
+        = select f, :template, @templates, class: "form-control"
+      .form-group
+        label.control-label
+          | Api Key:
+        = text_input f, :api_key, class: "form-control"
+      = submit "Create", class: "btn btn-primary"

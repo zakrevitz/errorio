@@ -1,22 +1,39 @@
-.row.pull-right.admin-actions
-  = link "Create new", to: admin_project_path(@conn, :new), class: "btn btn-info"
-table.table.table-hover.table-bordered
-  thead
-    tr
-      th ID
-      th Name
-      th Template
-      th API key
-      th Actions
-  tbody
-    = for project <- @projects do
-      tr
-        td= project.id
-        td= project.name
-        td= project.template
-        td= project.api_key
-        td.actions
-          .btn-group
-            = link "Details", to: admin_project_path(@conn, :show, project.id), class: "btn btn-xs btn-info"
-            = link "Update", to: admin_project_path(@conn, :edit, project.id), class: "btn btn-xs btn-info"
-          = link "Delete", to: admin_project_path(@conn, :delete, project.id), method: :delete, class: "btn btn-xs btn-danger"
+section.panel.panel-with-borders
+  .panel-heading
+    h2
+      .pull-right.admin-actions
+        = link "Create new", to: admin_project_path(@conn, :new), class: "btn btn-info"
+      | Projects
+  .panel-body
+    table.table.table-hover.nowrap
+      thead.thead-default
+        tr
+          th ID
+          th Name
+          th Template
+          th API key
+          th Actions
+      tfoot
+        tr
+          th ID
+          th Name
+          th Template
+          th API key
+          th Actions
+      tbody
+        = for project <- @projects do
+          tr
+            td= project.id
+            td= project.name
+            td= project.template
+            td= project.api_key
+            td.admin-actions
+              = link to: admin_project_path(@conn, :show, project.id), class: "link-underlined margin-right-15" do
+                i.icmn-pencil5
+                |  Details
+              / = link to: admin_project_path(@conn, :edit, project.id), class: "link-underlined margin-right-15" do
+                  / i.icmn-database-edit
+                  / | Edit
+              = link to: admin_project_path(@conn, :delete, project.id), method: :delete, class: "link-underlined" do
+                i.icmn-cross
+                |  Delete
