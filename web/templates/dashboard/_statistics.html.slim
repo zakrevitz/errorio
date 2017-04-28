@@ -1,64 +1,42 @@
-.row
-  .col-lg-3.col-md-6
-    .panel.panel-red
-      .panel-heading
-        .row
-          .col-xs-3
-            i.fa.fa-comments.fa-5x
-          .col-xs-9.text-right
-            .huge = @stats[:unresolved]
-            div Unresolved Errors
+.widget.widget-four.background-transparent
+  .row
+    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, state: "to_do") do
-        .panel-footer
-          span.pull-left View Details
-          span.pull-right
-            i.fa.fa-arrow-circle-right
-          .clearfix
-
-  .col-lg-3.col-md-6
-    .panel.panel-yellow
-      .panel-heading
-        .row
-          .col-xs-3
-            i.fa.fa-shopping-cart.fa-5x
-          .col-xs-9.text-right
-            .huge = @stats[:unassigned]
-            div Unassigned Errors
+        .step-block
+          span.step-digit
+            i.icmn-question4
+          .step-desc
+            span.step-title Unresolved Errors
+            p
+              ' Total:
+              = @stats[:unresolved]
+    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, sort: "unassigned") do
-        .panel-footer
-          span.pull-left View Details
-          span.pull-right
-            i.fa.fa-arrow-circle-right
-          .clearfix
-
-  .col-lg-3.col-md-6
-    .panel.panel-green
-      .panel-heading
-        .row
-          .col-xs-3
-            i.fa.fa-tasks.fa-5x
-          .col-xs-9.text-right
-            .huge = @stats[:in_progress]
-            div Errors in progress
+        .step-block
+          span.step-digit
+            i.icmn-user-cancel
+          .step-desc
+            span.step-title Unassigned Errors
+            p
+              ' Total:
+              = @stats[:unassigned]
+    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, state: "in_progress") do
-        .panel-footer
-          span.pull-left View Details
-          span.pull-right
-            i.fa.fa-arrow-circle-right
-          .clearfix
-
-  .col-lg-3.col-md-6
-    .panel.panel-primary
-      .panel-heading
-        .row
-          .col-xs-3
-            i.fa.fa-support.fa-5x
-          .col-xs-9.text-right
-            .huge = @stats[:reopened]
-            div Reopened Errors
+        .step-block
+          span.step-digit
+            i.icmn-hour-glass2
+          .step-desc
+            span.step-title Errors in progress
+            p
+              ' Total:
+              = @stats[:in_progress]
+    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, state: "reopened") do
-        .panel-footer
-          span.pull-left View Details
-          span.pull-right
-            i.fa.fa-arrow-circle-right
-          .clearfix
+        .step-block
+          span.step-digit
+            i.icmn-reset
+          .step-desc
+            span.step-title Reopened Errors
+            p
+              ' Total:
+              = @stats[:reopened]

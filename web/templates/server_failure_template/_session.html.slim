@@ -1,6 +1,4 @@
-ul.list
+dl.dl-vertical.word-break-break-all
   = for {session_key, session_value} <- @session do
-    li style="word-break: break-all"
-      b = session_key
-      ' :
-      = session_value
+    dt = session_key
+    dd = session_value

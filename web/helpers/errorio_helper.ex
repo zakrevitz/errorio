@@ -14,7 +14,7 @@ defmodule Errorio.ErrorioHelper do
 
   def format_date(date) do
     Timex.local(date)
-    |> Timex.format!("%H:%M:%S %d %b %Y %:z", :strftime)
+    |> Timex.format!("%H:%M:%S %d %b %Y %Z", :strftime)
   end
 
   def format_date_relative(date) do
@@ -35,12 +35,12 @@ defmodule Errorio.ErrorioHelper do
 
   def css_class_from_state(state) do
     case state do
-      "to_do" -> "panel-danger"
-      "reopened" -> "panel-danger"
-      "in_progress" ->  "panel-warning"
-      "to_check" ->  "panel-info"
-      "done" ->  "panel-success"
-      _ -> "panel-primary"
+      "to_do" -> "danger"
+      "reopened" -> "danger"
+      "in_progress" ->  "warning"
+      "to_check" ->  "info"
+      "done" ->  "success"
+      _ -> "primary"
     end
   end
 end

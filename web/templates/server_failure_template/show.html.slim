@@ -1,89 +1,76 @@
-.content.server_failure
-  .server_failure_content_header
-    .title
-      h1 = @server_failure_template.title
-    .date_time
-      a.time href="javascript:void(0)" data-toggle="popover" data-content="#{ErrorioHelper.format_date(@server_failure_template.last_time_seen_at)}"
-         = "Last time seen: #{ErrorioHelper.format_date_relative(@server_failure_template.last_time_seen_at)}"
-    .actions
-      .btn-group
-        = if ServerFailureTemplate.can_assign?(@server_failure_template, @current_user.id) do
-          = link "Take", to: server_failure_template_assign_path(@conn, :assign, @server_failure_template.id), class: 'btn btn-primary'
-        .btn-group
+section.panel.panel-with-borders
+  .panel-heading
+    h2 = @server_failure_template.title
+      .pull-right.admin-actions
+        .dropdown.margin-inline
           button.btn.btn-primary.dropdown-toggle type="button" data-toggle="dropdown" Actions
-            span.caret
           ul.dropdown-menu
+            = if ServerFailureTemplate.can_assign?(@server_failure_template, @current_user.id) do
+              = link to: server_failure_template_assign_path(@conn, :assign, @server_failure_template.id), class: "dropdown-item" do
+              i.icmn-user-plus
+              | Take
+              .dropdown-divider
             = for event <- ServerFailureTemplate.events do
               = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [@server_failure_template]) do
                 li
-                  = link(ErrorioHelper.humanize_atom(event), to: server_failure_template_migrate_path(@conn, :migrate, @server_failure_template.id, event: event))
-
-    .responsible
-      | It's&nbsp;
-      = if @server_failure_template.assignee do
-        = @server_failure_template.assignee.name
-      - else
-        |noone's
-      |&nbsp;problem.
-
-  .server_failure_content
-    .tabs
-      ul.nav.nav-tabs
-        li.active
-          a data-toggle="tab" href="#summary" Summary
-        li
-          a data-toggle="tab" href="#backtrace" Backtrace
-        li
-          a data-toggle="tab" href="#params" Params
-        li
-          a data-toggle="tab" href="#headers" Headers
-        li
-          a data-toggle="tab" href="#session" Session
-        li
-          a data-toggle="tab" href="#context" Context
-        li
-          a data-toggle="tab" href="#similar"
+                  = link(ErrorioHelper.humanize_atom(event), to: server_failure_template_migrate_path(@conn, :migrate, @server_failure_template.id, event: event), class: "dropdown-item")
+  .panel-body
+    dl.dl-horizontal
+      dt Last time seen at
+      dd = ErrorioHelper.format_date_relative(@server_failure_template.last_time_seen_at)
+      dt Assignee
+      dd
+        = if @server_failure_template.assignee do
+          = @server_failure_template.assignee.name
+        - else
+          | —
+    .nav-tabs-horizontal
+      ul.nav.nav-tabs role="tablist"
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" data-target="#summary" role="tab" Summary
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" data-target="#backtrace" role="tab" Backtrace
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" role="tab" data-target="#params" Params
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" role="tab" data-target="#headers" Headers
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" role="tab" data-target="#session" Session
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" role="tab" data-target="#context" Context
+        li.nav-item
+          a.nav-link href="javascript:void(0);" data-toggle="tab" role="tab" data-target="#similar"
             ' Similar Errors
             = "(#{@server_failure_template.server_failure_count})"
-    .tab-content
-      #summary.tab-pane.in.active
-        h3 Summary
-        .summary_item
+
+      .tab-content.padding-vertical-20
+        #summary.tab-pane.active role="tabpanel"
           pre = @server_failure_info.exception
-        .summary_item
-          = link @server_failure_info.server, to: @server_failure_info.server
-        .summary_item
-          strong
-            ' Request:
-          = @server_failure_info.request
-          '
-          = @server_failure_info.processed_by
-        .summary_item
-          strong
-           ' Host:
-          = @server_failure_info.host
-      #backtrace.tab-pane
-        h3 Backtrace
-        = render "_backtrace.html", conn: @conn, backtrace: @server_failure_info.backtrace
-      #params.tab-pane
-        h3 Params
-        pre
-          = Poison.encode!(@server_failure_info.params)
-      #headers.tab-pane
-        h3 Headers
-        = if @server_failure_info.headers do
-          = render "_headers.html", conn: @conn, headers: @server_failure_info.headers
-      #session.tab-pane
-        h3 Session
-        = if @server_failure_info.session do
-          = render "_session.html", conn: @conn, session: @server_failure_info.session
-      #context.tab-pane
-        h3 Context
-        = render "_context.html", conn: @conn, context: @server_failure_info.context
+          dl.dl-horizontal
+            dt Server
+            dd = link @server_failure_info.server, to: @server_failure_info.server
+            dt Request
+            dd
+              = @server_failure_info.request
+              '
+              = @server_failure_info.processed_by
+            dt Host
+            dd = @server_failure_info.host
 
-      #similar.tab-pane
-        h3 Similar Errors
-        p COMING SOON...
+        #backtrace.tab-pane role="tabpanel"
+          = render "_backtrace.html", conn: @conn, backtrace: @server_failure_info.backtrace
+        #params.tab-pane role="tabpanel"
+          pre
+            = Poison.encode!(@server_failure_info.params)
+        #headers.tab-pane role="tabpanel"
+          = if @server_failure_info.headers do
+            = render "_headers.html", conn: @conn, headers: @server_failure_info.headers
+        #session.tab-pane role="tabpanel"
+          = if @server_failure_info.session do
+            = render "_session.html", conn: @conn, session: @server_failure_info.session
+        #context.tab-pane role="tabpanel"
+          = render "_context.html", conn: @conn, context: @server_failure_info.context
 
+        #similar.tab-pane role="tabpanel"
+          p COMING SOON...
 
-  / = inspect(@server_failure_info.request)

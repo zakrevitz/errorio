@@ -1,0 +1,13 @@
+
+li class="#{active_on_current(@conn, dashboard_path(@conn, :index))}"
+  = link to: dashboard_path(@conn, :index), class: "left-menu-link" do
+    i.left-menu-link-icon.icmn-home2
+    | Dashboard
+li class="#{active_on_current(@conn, project_path(@conn, :index))}"
+  = link to: project_path(@conn, :index), class: "left-menu-link" do
+    i.left-menu-link-icon.icmn-menu3
+    | Projects
+li class="#{active_on_current(@conn, server_failure_template_path(@conn, :index))}"
+  = link to: server_failure_template_path(@conn, :index), class: "left-menu-link" do
+    i.left-menu-link-icon.icmn-bug
+    | Errors

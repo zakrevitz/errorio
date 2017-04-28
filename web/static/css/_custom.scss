@@ -1,6 +1,9 @@
 * {
   box-sizing: border-box;
 }
+/* Phoenix flash messages */
+
+.alert:empty { display: none; }
 
 [class*=" icmn-"], [class^=icmn-] {
   &.green {
@@ -163,4 +166,10 @@ ul.list {
 
 span.help-block {
   color: #fb434a;
+}
+tr.clickable_row {
+  cursor: pointer;
+}
+.word-break-break-all {
+  word-break: break-all;
 }

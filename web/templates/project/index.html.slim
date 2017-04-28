@@ -1,17 +1,20 @@
-.project_wrapper
-  h2 Sort
-  #sorts.btn-group
-    button.btn.btn-default.active data-sort-by="original-order"
-      | Default sort
-    button.btn.btn-default data-sort-by="name"
-      | By name
-    button.btn.btn-default data-sort-by="template"
-      | By template
-    button.btn.btn-default data-sort-by="error_count"
-      | By errors
-  hr
-  .projects_container
-    = for project <- @projects do
-      = render "_project.html", project: project, conn: @conn
-  = if @page.total_pages > 1 do
-    = pagination_links @page
+section.panel.panel-with-borders
+  .panel-heading
+    h2 Projects
+  .panel-body
+    table#projects_table.table.table-hover.nowrap
+      thead.thead-default
+        tr
+          th ID
+          th Name
+          th Errors
+          th Template
+      tfoot
+        tr
+          th ID
+          th Name
+          th Errors
+          th Template
+      tbody
+        = for project <- @projects do
+          = render "_project.html", project: project, conn: @conn

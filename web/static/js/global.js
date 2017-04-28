@@ -6,8 +6,10 @@ class Global {
   init() {
     // this.isotopeInit()
     this.popoverInit()
+    this.tooltipInit()
     this.editableInit()
     this.showPasswordInit()
+    this.dataTableInit()
   }
 
   isotopeInit() {
@@ -46,8 +48,18 @@ class Global {
     });
   }
 
+  dataTableInit() {
+    $('#projects_table').DataTable({
+      responsive: true
+    });
+  }
+
   popoverInit() {
     $('[data-toggle="popover"]').popover();
+  }
+
+  tooltipInit() {
+    $("[data-toggle=tooltip]").tooltip();
   }
 
   editableInit() {

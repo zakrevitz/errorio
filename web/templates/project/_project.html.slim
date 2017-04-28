@@ -1,12 +1,7 @@
-.project_item.panel.panel-info
-  .panel-heading
-    h3.panel-title.name = @project.name
-  .panel-body
-    p.template
-      b
-        ' Template:
-      = @project.template
-    = link to: server_failure_template_path(@conn, :index, project_id: @project.id) do
-      ' Errors:
-      span.error_count
-        = ErrorioHelper.sum(@project.server_failure_templates, :server_failure_count)
+tr.clickable_row onclick="window.document.location='#{server_failure_template_path(@conn, :index, project_id: @project.id)}';"
+  td= @project.id
+  td= @project.name
+  td
+    = link to: server_failure_template_path(@conn, :index, project_id: @project.id), class: "link-underlined" do
+      = ErrorioHelper.sum(@project.server_failure_templates, :server_failure_count)
+  td= @project.template

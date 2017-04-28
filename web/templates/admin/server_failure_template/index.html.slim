@@ -29,7 +29,9 @@ section.panel.panel-with-borders
             td= server_failure.id
             td= server_failure.title
             td= "#{server_failure.server_failure_count} time(s)"
-            td= server_failure.state
+            td
+              span.label.label-pill class="label-#{ErrorioHelper.css_class_from_state(server_failure.state)}"
+                = server_failure.state
             td
               = if server_failure.project do
                 = link server_failure.project.name, to: admin_project_path(@conn, :show, server_failure.project.id), class: "link-underlined"

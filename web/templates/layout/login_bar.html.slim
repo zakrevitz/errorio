@@ -1,24 +1,28 @@
 = if @current_user do
-  ul.nav.navbar-right.top-nav
-    li.dropdown
-      a.dropdown-toggle data-toggle="dropdown" href="#"
-        i.fa.fa-user
+  .dropdown.dropdown-avatar
+    a.dropdown-toggle href="javascript: void(0);" data-toggle="dropdown" aria-expanded="false"
+      span.avatar href="javascript:void(0);"
+        img src="#{static_path(@conn, "/images/user.png")}"
+
+    ul.dropdown-menu.dropdown-menu-right aria-labelledby="" role="menu"
+      .dropdown-item
         = " #{@current_user.name}"
-        b.caret
-      ul.dropdown-menu
-        li
-          a href="#"
-            i.fa.fa-fw.fa-gear
-            | Settings
-        li.divider
-        li
-          = link to: auth_path(@conn, :logout), method: :delete do
-            i.fa.fa-fw.fa-power-off
-            = " Log Out"
+      .dropdown-divider
+      a.dropdown-item href="javascript:void(0)"
+        i.dropdown-icon.icmn-user
+        | Settings
+      .dropdown-divider
+      = link to: auth_path(@conn, :logout), method: :delete, class: "dropdown-item" do
+        i.dropdown-icon.icmn-exit
+        = " Log Out"
+
 - else
   = if @conn.request_path != auth_path(@conn, :login, "identity") do
-    ul.nav.navbar-right.top-nav
-      li
-        = link to: auth_path(@conn, :login, "identity"), class: 'dropdown-toggle' do
-          i.fa.fa-user
-          = " Login"
+    .dropdown.dropdown-avatar
+      a.dropdown-toggle href="javascript: void(0);" data-toggle="dropdown" aria-expanded="false"
+        span.avatar href="javascript:void(0);"
+          img src="<%= static_path(@conn, '/images/user.png') %>"
+      ul.dropdown-menu.dropdown-menu-right aria-labelledby="" role="menu"
+        = link to: auth_path(@conn, :login, "identity"), class: 'dropdown-item' do
+          i.dropdown-icon.icmn-user
+          | Login
