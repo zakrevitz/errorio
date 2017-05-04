@@ -1,10 +1,29 @@
 section.panel.panel-with-borders
   .panel-heading
     h2 Server Failures
-    .btn-group
-      = link 'Show all errors', to: server_failure_template_path(@conn, :index, Map.delete(@conn.params, "sort")), class: 'btn'
-      = link 'Show only my errors', to: server_failure_template_path(@conn, :index, Map.merge(@conn.params, %{sort: "my"})), class: 'btn'
-      = link 'Clear filter', to: server_failure_template_path(@conn, :index), class: 'btn'
+    .display-inline-block
+      = form_tag(server_failure_template_path(@conn, :index, @conn.params), method: :get, enforce_utf8: false, class: 'form-inline', style: "position:relative") do
+        .form-group.margin-inline
+          .btn-group data-toggle="buttons"
+            label.btn.btn-default-outline.active
+              input type="radio" name="assigned" value='' All errors
+            label.btn.btn-default-outline
+              input type="radio" name="assigned" value='my' Only assigned to me
+        .form-group.margin-inline
+          input#date_from.form-control.width-200.display-inline-block.margin-inline type="text" name="date_from" placeholder="From"
+          span.margin-right-10 —
+          input#date_to.form-control.width-200.display-inline-block.margin-inline type="text" name="date_to" placeholder="To"
+        .form-group
+          .display-inline-block.margin-inline style="width:200px"
+            select.select2 name="sort" style="width:100%"
+              option value="title" Title
+              option value="occurrences" Occurences
+              option value="priority" Priority
+              option value="last_time" Last time seen
+        = submit "Show!", class: 'btn margin-inline'
+    .display-inline-block
+      = link 'Clear filter', to: server_failure_template_path(@conn, :index), class: 'btn margin-inline'
+
   .panel-body
     .table-responsive
       table#errors_table.table.table-hover.nowrap

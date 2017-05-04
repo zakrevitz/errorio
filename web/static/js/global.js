@@ -10,6 +10,8 @@ class Global {
     this.editableInit()
     this.showPasswordInit()
     this.dataTableInit()
+    this.datePickerInit()
+    this.select2Init()
   }
 
   isotopeInit() {
@@ -87,6 +89,49 @@ class Global {
         eyeOpenClass: 'icmn-eye',
         eyeCloseClass: 'icmn-eye-blocked'
     });
+  }
+
+  datePickerInit() {
+    $('#date_from').datetimepicker({
+      widgetPositioning: {
+        horizontal: 'left'
+      },
+      icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-arrow-up',
+        down: 'fa fa-arrow-down'
+      },
+      format: 'DD/MM/Y'
+    });
+
+    $('#date_to').datetimepicker({
+      widgetPositioning: {
+        horizontal: 'left'
+      },
+      icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-arrow-up',
+        down: 'fa fa-arrow-down'
+      },
+      format: 'DD/MM/Y',
+      useCurrent: false
+    });
+    $('#date_from').on('dp.change', function(e) {
+      $('#date_to').data('DateTimePicker').minDate(e.date);
+    });
+
+    $('#date_to').on('dp.change', function(e) {
+      $('#date_from').data('DateTimePicker').maxDate(e.date);
+    });
+
+  }
+  select2Init() {
+    $(".select2").select2({
+      dropdownAutoWidth : true,
+      minimumResultsForSearch: -1
+    })
   }
 }
 
