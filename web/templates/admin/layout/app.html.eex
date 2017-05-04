@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
-    <title>Admin - Phoenix Guardian</title>
+    <title>Admin - Errori</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
@@ -38,7 +38,7 @@
         </div>
         <div class="menu-info-block">
           <div class="left">
-            <h1>Admin place</h1>
+            <h1>Admin</h1>
           </div>
         </div>
       </div>

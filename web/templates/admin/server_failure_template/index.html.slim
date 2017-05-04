@@ -2,60 +2,61 @@ section.panel.panel-with-borders
   .panel-heading
     h2 Errors
   .panel-body
-    table.table.table-hover.nowrap
-      thead.thead-default
-        tr
-          th ID
-          th Title
-          th Occurrences
-          th State
-          th Project
-          th Last seen at
-          th Assignee
-          th Actions
-      tfoot
-        tr
-          th ID
-          th Title
-          th Occurrences
-          th State
-          th Project
-          th Last seen at
-          th Assignee
-          th Actions
-      tbody
-        = for server_failure <- @server_failures do
+    .table-responsive
+      table.table.table-hover.nowrap
+        thead.thead-default
           tr
-            td= server_failure.id
-            td= server_failure.title
-            td= "#{server_failure.server_failure_count} time(s)"
-            td
-              span.label.label-pill class="label-#{ErrorioHelper.css_class_from_state(server_failure.state)}"
-                = server_failure.state
-            td
-              = if server_failure.project do
-                = link server_failure.project.name, to: admin_project_path(@conn, :show, server_failure.project.id), class: "link-underlined"
-            td= ErrorioHelper.format_date(server_failure.last_time_seen_at)
-            td
-              = if server_failure.assignee do
-                = link server_failure.assignee.name, to: admin_user_path(@conn, :show, server_failure.assignee.id), class: "link-underlined"
-              - else
-                | —
-            td.admin-actions
-              .dropdown.margin-inline
-                button.btn.btn-no-outline.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false" Events
-                ul.dropdown-menu aria-labelledby="" role="menu"
-                  = for event <- ServerFailureTemplate.events do
-                    = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [server_failure]) do
-                      = link(ErrorioHelper.humanize_atom(event), to: admin_server_failure_template_migrate_path(@conn, :migrate, server_failure.id, event: event), class: "dropdown-item")
+            th ID
+            th Title
+            th Occurrences
+            th State
+            th Project
+            th Last seen at
+            th Assignee
+            th Actions
+        tfoot
+          tr
+            th ID
+            th Title
+            th Occurrences
+            th State
+            th Project
+            th Last seen at
+            th Assignee
+            th Actions
+        tbody
+          = for server_failure <- @server_failures do
+            tr
+              td= server_failure.id
+              td= server_failure.title
+              td= "#{server_failure.server_failure_count} time(s)"
+              td
+                span.label.label-pill class="label-#{ErrorioHelper.css_class_from_state(server_failure.state)}"
+                  = server_failure.state
+              td
+                = if server_failure.project do
+                  = link server_failure.project.name, to: admin_project_path(@conn, :show, server_failure.project.id), class: "link-underlined"
+              td= ErrorioHelper.format_date(server_failure.last_time_seen_at)
+              td
+                = if server_failure.assignee do
+                  = link server_failure.assignee.name, to: admin_user_path(@conn, :show, server_failure.assignee.id), class: "link-underlined"
+                - else
+                  | —
+              td.admin-actions
+                .dropdown.margin-inline
+                  button.btn.btn-no-outline.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false" Events
+                  ul.dropdown-menu aria-labelledby="" role="menu"
+                    = for event <- ServerFailureTemplate.events do
+                      = if apply(ServerFailureTemplate, String.to_existing_atom("can_#{event}?"), [server_failure]) do
+                        = link(ErrorioHelper.humanize_atom(event), to: admin_server_failure_template_migrate_path(@conn, :migrate, server_failure.id, event: event), class: "dropdown-item")
 
-              = link to: admin_server_failure_template_path(@conn, :show, server_failure.id), class: "link-underlined margin-right-15" do
-                i.icmn-pencil5
-                |  Details
+                = link to: admin_server_failure_template_path(@conn, :show, server_failure.id), class: "link-underlined margin-right-15" do
+                  i.icmn-pencil5
+                  |  Details
 
-              = link to: admin_server_failure_template_path(@conn, :delete, server_failure.id), method: :delete, class: "link-underlined" do
-                i.icmn-cross
-                |  Delete
+                = link to: admin_server_failure_template_path(@conn, :delete, server_failure.id), method: :delete, class: "link-underlined" do
+                  i.icmn-cross
+                  |  Delete
 
-= if @page.total_pages > 1 do
-  = pagination_links @page
+    = if @page.total_pages > 1 do
+      = pagination_links @page

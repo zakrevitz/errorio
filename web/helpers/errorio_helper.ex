@@ -43,4 +43,17 @@ defmodule Errorio.ErrorioHelper do
       _ -> "primary"
     end
   end
+
+  def css_class_from_priority(priority) do
+    case priority do
+      :no_priority -> "icmn-minus2 color-success"
+      :trivial -> "icmn-arrow-down16 color-success"
+      :minor -> "icmn-arrow-down6 color-success"
+      :major -> "icmn-arrow-up6 color-danger"
+      :critical -> "icmn-arrow-up16 color-danger"
+      :mega_critical -> "icmn-fire color-danger"
+      :kiday_vse_i_zaymis_etim -> "icmn-gun color-danger"
+    end
+  end
 end
+

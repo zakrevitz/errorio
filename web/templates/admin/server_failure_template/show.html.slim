@@ -29,22 +29,23 @@ section.panel.panel-with-borders
   .panel-heading
     h3 Event logs
   .panel-body
-    table.table.table-hover.nowrap
-      thead.thead-default
-        tr
-          th ID
-          th Info
-          th Responsible
-          th Time
-      tbody
-        = for event <- @server_failure_template.event_transition_logs do
+    .table-responsive
+      table.table.table-hover.nowrap
+        thead.thead-default
           tr
-            td=event.id
-            td=event.info
-            td
-              = if event.responsible do
-                =event.responsible.name
-              - else
-                | Automatic
+            th ID
+            th Info
+            th Responsible
+            th Time
+        tbody
+          = for event <- @server_failure_template.event_transition_logs do
+            tr
+              td=event.id
+              td=event.info
+              td
+                = if event.responsible do
+                  =event.responsible.name
+                - else
+                  | Automatic
 
-            td=event.inserted_at
+              td=event.inserted_at

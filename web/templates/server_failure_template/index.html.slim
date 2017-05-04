@@ -6,28 +6,31 @@ section.panel.panel-with-borders
       = link 'Show only my errors', to: server_failure_template_path(@conn, :index, Map.merge(@conn.params, %{sort: "my"})), class: 'btn'
       = link 'Clear filter', to: server_failure_template_path(@conn, :index), class: 'btn'
   .panel-body
-    table#errors_table.table.table-hover.nowrap
-      thead.thead-default
-        tr
-          th Title
-          th Assignee
-          th Occurrences
-          th State
-          th First time seen
-          th Last time seen
-          th Actions
-      tfoot
-        tr
-          th Title
-          th Assignee
-          th Occurrences
-          th State
-          th First time seen
-          th Last time seen
-          th Actions
-      tbody
-        = for serv <- @server_failures do
-          = render "_server_failure.html", serv: serv, conn: @conn
+    .table-responsive
+      table#errors_table.table.table-hover.nowrap
+        thead.thead-default
+          tr
+            th Title
+            th Assignee
+            th Occurrences
+            th State
+            th Priority
+            th First time seen
+            th Last time seen
+            th Actions
+        tfoot
+          tr
+            th Title
+            th Assignee
+            th Occurrences
+            th State
+            th Priority
+            th First time seen
+            th Last time seen
+            th Actions
+        tbody
+          = for serv <- @server_failures do
+            = render "_server_failure.html", serv: serv, conn: @conn, current_user: @current_user
 
     = if @page.total_pages > 1 do
       = pagination_links @page

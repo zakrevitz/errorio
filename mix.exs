@@ -62,7 +62,8 @@ defmodule Errorio.Mixfile do
      {:ecto_state_machine, "~> 0.3.0"},
      {:timex, "~> 3.1"},
      {:scrivener_ecto, "~> 1.2"},
-     {:scrivener_html, "~> 1.1"}]
+     {:scrivener_html, "~> 1.1"},
+     {:ecto_enum, "~> 1.0"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

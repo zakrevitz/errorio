@@ -20,7 +20,10 @@ defmodule Errorio.Admin.SessionController do
   plug EnsureAuthenticated, [key: :admin, handler: __MODULE__] when action in [:delete, :impersonate, :stop_impersonating]
 
   def new(conn, _params, current_user, _claims) do
-    render conn, "new.html", current_user: current_user
+    case current_user do
+      nil -> conn |> render("new.html", current_user: current_user )
+      user -> conn |> redirect(to: admin_project_path(conn, :index))
+    end
   end
 
   def callback(%Plug.Conn{assigns: %{ueberauth_failure: fails}} = conn, _params, current_user, _claims) do

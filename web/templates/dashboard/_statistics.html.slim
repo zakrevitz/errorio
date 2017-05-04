@@ -21,7 +21,7 @@
               ' Total:
               = @stats[:unassigned]
     .col-xl-3.col-lg-6.col-sm-6.col-xs-12
-      = link to: server_failure_template_path(@conn, :index, state: "in_progress") do
+      = link to: server_failure_template_path(@conn, :index, state: "in_progress", sort: "my") do
         .step-block
           span.step-digit
             i.icmn-hour-glass2
@@ -31,7 +31,7 @@
               ' Total:
               = @stats[:in_progress]
     .col-xl-3.col-lg-6.col-sm-6.col-xs-12
-      = link to: server_failure_template_path(@conn, :index, state: "reopened") do
+      = link to: server_failure_template_path(@conn, :index, state: "reopened", sort: "my") do
         .step-block
           span.step-digit
             i.icmn-reset

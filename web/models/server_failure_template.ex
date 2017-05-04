@@ -35,6 +35,7 @@ defmodule Errorio.ServerFailureTemplate do
     field :params, :string
     field :state, :string, default: "to_do"
     field :last_time_seen_at, :naive_datetime
+    field :priority, PriorityType
     belongs_to :assignee, Errorio.User, foreign_key: :user_id
     belongs_to :project, Errorio.Project
     has_many :server_failures, Errorio.ServerFailure
@@ -122,6 +123,10 @@ defmodule Errorio.ServerFailureTemplate do
         reopened: fragment("count(case when state = 'reopened' then 1 else null end)")
       }
     ) |> Errorio.Repo.one
+  end
+
+  def priority_id(model) do
+    Keyword.get(PriorityType.__enum_map__(), model.priority, 0)
   end
 
   defp generate_info(old, new, name) do
