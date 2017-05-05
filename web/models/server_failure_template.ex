@@ -49,7 +49,7 @@ defmodule Errorio.ServerFailureTemplate do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:server_failure_count, :md5_hash, :state])
+    |> cast(params, [:server_failure_count, :md5_hash, :state, :priority])
     |> validate_required([:server_failure_count, :md5_hash])
   end
 
@@ -129,6 +129,13 @@ defmodule Errorio.ServerFailureTemplate do
     Keyword.get(PriorityType.__enum_map__(), model.priority, 0)
   end
 
+  def priority_types_for_editable do
+    Enum.into(PriorityType.__enum_map__(), [], fn(tuple) ->
+      tuple = Tuple.to_list(tuple)
+      %{value: List.last(tuple), text: tuple |> List.first |> Atom.to_string}
+    end)
+  end
+
   def filter(changeset, params, current_user) do
     project_id = Map.get(params, "project_id", nil)
     assigned = Map.get(params, "assigned", nil)
@@ -178,19 +185,13 @@ defmodule Errorio.ServerFailureTemplate do
   end
 
   defp filter_date(changeset, "", ""), do: changeset
+  defp filter_date(changeset, nil, nil), do: changeset
   defp filter_date(changeset, date_from, date_to) do
     import Errorio.ErrorioHelper, only: [parse_date: 1]
     changeset =
-    if date_from do
       changeset |> where([ser_tem], ser_tem.last_time_seen_at >= ^parse_date(date_from))
-    else
-      changeset
-    end
     changeset =
-    if date_to do
-      changeset |> where([ser_tem], ser_tem.last_time_seen_at <= ^parse_date(date_to))
-    else
-      changeset
-    end
+      # 86399 = seconds in day - 1
+      changeset |> where([ser_tem], ser_tem.last_time_seen_at <= ^NaiveDateTime.add(parse_date(date_to), 86399))
   end
 end

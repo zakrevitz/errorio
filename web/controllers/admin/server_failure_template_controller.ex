@@ -55,6 +55,29 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
     end
   end
 
+  def update(conn, %{"server_failure_template" => params, "id" => id}, _current_user, _claims) do
+    {id, _} = Integer.parse(id)
+    case find_resource(id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Oops, something gone wrong")
+        |> redirect(to: admin_server_failure_template_path(conn, :index))
+      server_failure_template ->
+        result = server_failure_template
+        |> ServerFailureTemplate.changeset(params)
+        |> Errorio.Repo.update
+        case result do
+          {:ok, server_failure_template} ->
+            conn
+            |> render("assign.json", server_failure_template: server_failure_template)
+          {:error, reason} ->
+            conn
+            |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(reason)}")
+            |> redirect(to: admin_server_failure_template_path(conn, :index))
+        end
+    end
+  end
+
   def assign(conn, %{"server_failure_template" => params, "server_failure_template_id" => id}, _current_user, _claims) do
     {id, _} = Integer.parse(id)
     case find_resource(id) do

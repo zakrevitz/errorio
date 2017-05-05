@@ -82,6 +82,30 @@ class Global {
       },
       pk: 1
     });
+
+    $('#priority').editable({
+      params: function(params) {
+        var data = {"server_failure_template": {} };
+        data['server_failure_template'][params.name] = params.value;
+        return data;
+      },
+      ajaxOptions: {
+        headers: {
+          "X-CSRF-TOKEN": csrf
+        },
+        type: "PUT"
+      },
+      pk: 1,
+      source: [
+            {text: "no_priority", value: "no_priority"},
+            {text: "trivial", value: "trivial"},
+            {text: "minor", value: "minor"},
+            {text: "major", value: "major"},
+            {text: "critical", value: "critical"},
+            {text: "mega_critical", value: "mega_critical"},
+            {text: "kiday_vse_i_zaymis_etim", value: "kiday_vse_i_zaymis_etim"}
+       ]
+    });
   }
   showPasswordInit() {
     $('.show_password').password({
