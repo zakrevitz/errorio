@@ -177,17 +177,18 @@ defmodule Errorio.ServerFailureTemplate do
     end
   end
 
-  defp filter_date(changeset, nil, nil), do: changeset
+  defp filter_date(changeset, "", ""), do: changeset
   defp filter_date(changeset, date_from, date_to) do
+    import Errorio.ErrorioHelper, only: [parse_date: 1]
     changeset =
     if date_from do
-      changeset |> where([ser_tem], ser_tem.last_time_seen_at >= ^Timex.parse!(date_from, "%d/%m/%Y", :strftime))
+      changeset |> where([ser_tem], ser_tem.last_time_seen_at >= ^parse_date(date_from))
     else
       changeset
     end
     changeset =
     if date_to do
-      changeset |> where([ser_tem], ser_tem.last_time_seen_at <= ^Timex.parse!(date_to, "%d/%m/%Y", :strftime))
+      changeset |> where([ser_tem], ser_tem.last_time_seen_at <= ^parse_date(date_to))
     else
       changeset
     end
