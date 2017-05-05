@@ -22,6 +22,15 @@ defmodule Errorio.ErrorioHelper do
     |> Timex.format!("{relative}", :relative)
   end
 
+  def parse_date(date) when is_binary(date), do: parse_date(date, "%d/%m/%Y")
+  def parse_date(date, format) when is_binary(date) do
+    case Timex.parse(date, format, :strftime) do
+      {:ok, date_time} -> date_time
+      {:error, _reason} -> parse_date(nil)
+    end
+  end
+  def parse_date(_), do: Timex.to_naive_datetime(Timex.today)
+
   def sum(list, key) do
     Enum.reduce(list, 0, fn(x, acc) -> Map.get(x, key, 0) + acc end)
   end

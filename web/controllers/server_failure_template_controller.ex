@@ -9,16 +9,9 @@ defmodule Errorio.ServerFailureTemplateController do
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
 
   def index(conn, params, current_user, _claims) do
-    project_id = Map.get(params, "project_id", nil)
-    assigned = Map.get(params, "assigned", nil)
-    state = Map.get(params, "state", nil)
-    sort = Map.get(params, "sort", nil)
     page =
       ServerFailureTemplate
-      |> fitler_project(project_id)
-      |> fitler_sort(current_user.id, assigned)
-      |> fitler_sort(sort)
-      |> fitler_sort_by_state(state)
+      |> ServerFailureTemplate.filter(params, current_user)
       |> preload(:assignee)
       |> Repo.paginate(params)
 
@@ -110,33 +103,5 @@ defmodule Errorio.ServerFailureTemplateController do
       |> order_by(desc: :updated_at)
       |> limit(1)
       |> Repo.one
-  end
-
-  defp fitler_project(changeset, nil), do: changeset
-  defp fitler_project(changeset, project_id), do: changeset |> where([ser_tem], ser_tem.project_id == ^project_id)
-
-  defp fitler_sort(changeset, sort) do
-    case sort do
-      "title" -> changeset |> order_by([ser_tem], ser_tem.title)
-      "priority" -> changeset |> order_by([ser_tem], desc: ser_tem.priority)
-      "last_time" -> changeset |> order_by([ser_tem], ser_tem.last_time_seen_at)
-      "occurrences" -> changeset |> order_by([ser_tem], desc: ser_tem.server_failure_count)
-      _ -> changeset
-    end
-  end
-
-  defp fitler_sort(changeset, user_id, sort) do
-    case sort do
-      "my" -> changeset |> where([ser_tem], ser_tem.user_id == ^user_id)
-      "unassigned" -> changeset |> where([ser_tem], is_nil(ser_tem.user_id))
-      _ -> changeset
-    end
-  end
-
-  defp fitler_sort_by_state(changeset, state) do
-    case state do
-      st when is_binary(st) -> changeset |> where([ser_tem], ser_tem.state == ^state)
-      _ -> changeset
-    end
   end
 end

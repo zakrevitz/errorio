@@ -10,6 +10,7 @@ section.panel.panel-with-borders
             th Title
             th Occurrences
             th State
+            th Priority
             th Project
             th Last seen at
             th Assignee
@@ -20,6 +21,7 @@ section.panel.panel-with-borders
             th Title
             th Occurrences
             th State
+            th Priority
             th Project
             th Last seen at
             th Assignee
@@ -33,6 +35,8 @@ section.panel.panel-with-borders
               td
                 span.label.label-pill class="label-#{ErrorioHelper.css_class_from_state(server_failure.state)}"
                   = server_failure.state
+              td
+                i data-toggle="tooltip" data-title="#{server_failure.priority}" data-placement="top" class="#{ErrorioHelper.css_class_from_priority(server_failure.priority)}"
               td
                 = if server_failure.project do
                   = link server_failure.project.name, to: admin_project_path(@conn, :show, server_failure.project.id), class: "link-underlined"

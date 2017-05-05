@@ -129,7 +129,67 @@ defmodule Errorio.ServerFailureTemplate do
     Keyword.get(PriorityType.__enum_map__(), model.priority, 0)
   end
 
+  def filter(changeset, params, current_user) do
+    project_id = Map.get(params, "project_id", nil)
+    assigned = Map.get(params, "assigned", nil)
+    state = Map.get(params, "state", nil)
+    sort = Map.get(params, "sort", nil)
+    date_from = Map.get(params, "date_from", nil)
+    date_to = Map.get(params, "date_to", nil)
+
+    changeset
+    |> filter_project(project_id)
+    |> filter_assignee(current_user.id, assigned)
+    |> filter_state(state)
+    |> filter_date(date_from, date_to)
+    |> sort_attributes(sort)
+  end
+
   defp generate_info(old, new, name) do
     name <> " moved bug from state: " <> old.state <> " to: " <> new.state
+  end
+
+  defp filter_project(changeset, nil), do: changeset
+  defp filter_project(changeset, project_id), do: changeset |> where([ser_tem], ser_tem.project_id == ^project_id)
+
+  defp filter_assignee(changeset, user_id, sort) do
+    case sort do
+      "my" -> changeset |> where([ser_tem], ser_tem.user_id == ^user_id)
+      "unassigned" -> changeset |> where([ser_tem], is_nil(ser_tem.user_id))
+      _ -> changeset
+    end
+  end
+
+  defp filter_state(changeset, state) do
+    case state do
+      st when is_binary(st) -> changeset |> where([ser_tem], ser_tem.state == ^state)
+      _ -> changeset
+    end
+  end
+
+  defp sort_attributes(changeset, sort) do
+    case sort do
+      "title" -> changeset |> order_by([ser_tem], ser_tem.title)
+      "priority" -> changeset |> order_by([ser_tem], desc: ser_tem.priority)
+      "last_time" -> changeset |> order_by([ser_tem], desc: ser_tem.last_time_seen_at)
+      "occurrences" -> changeset |> order_by([ser_tem], desc: ser_tem.server_failure_count)
+      _ -> changeset |> order_by([ser_tem], desc: ser_tem.last_time_seen_at)
+    end
+  end
+
+  defp filter_date(changeset, nil, nil), do: changeset
+  defp filter_date(changeset, date_from, date_to) do
+    changeset =
+    if date_from do
+      changeset |> where([ser_tem], ser_tem.last_time_seen_at >= ^Timex.parse!(date_from, "%d/%m/%Y", :strftime))
+    else
+      changeset
+    end
+    changeset =
+    if date_to do
+      changeset |> where([ser_tem], ser_tem.last_time_seen_at <= ^Timex.parse!(date_to, "%d/%m/%Y", :strftime))
+    else
+      changeset
+    end
   end
 end

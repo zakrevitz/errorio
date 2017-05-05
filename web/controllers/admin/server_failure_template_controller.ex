@@ -12,6 +12,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
     page =
       ServerFailureTemplate
       |> preload([:project, :assignee])
+      |> order_by([ser_tem], desc: ser_tem.last_time_seen_at)
       |> Repo.paginate(params)
     render(conn, "index.html", server_failures: page.entries, current_user: current_user, page: page)
   end
