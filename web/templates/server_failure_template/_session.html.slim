@@ -1,4 +1,4 @@
 dl.dl-vertical.word-break-break-all
   = for {session_key, session_value} <- @session do
     dt = session_key
-    dd = session_value
+    dd = inspect(session_value)
