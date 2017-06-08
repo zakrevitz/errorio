@@ -61,6 +61,6 @@ section.panel.panel-with-borders
                 = link to: admin_server_failure_template_path(@conn, :delete, server_failure.id), method: :delete, class: "link-underlined" do
                   i.icmn-cross
                   |  Delete
-
-    = if @page.total_pages > 1 do
-      = pagination_links @page
+    = paginate @conn, @kerosene
+    / = if @page.total_pages > 1 do
+      / = pagination_links @page

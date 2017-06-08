@@ -173,3 +173,36 @@ tr.clickable_row {
 .word-break-break-all {
   word-break: break-all;
 }
+.pagination {
+  li {
+    display: inline;
+    a, span[class=""] {
+      position: relative;
+      float: left;
+      padding: .5rem .75rem;
+      line-height: 1.5;
+      text-decoration: none;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-color: #dfe4ed;
+      color: #827ca1;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    &:first-child a{
+      margin-left: 0;
+      border-top-left-radius: .25rem;
+      border-bottom-left-radius: .25rem;
+    }
+  }
+}
+
+
+.page-item:first-child .page-link {
+}
+.pagination .page-link {
+
+}
+.page-link {
+
+}

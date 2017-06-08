@@ -1,14 +1,20 @@
 section.panel.panel-with-borders
   .panel-heading
-    h2 Server Failures
+    = if @project do
+      h2 #{@project.name}`s errors
+    - else
+      h2 Server failures
     .display-inline-block
-      = form_tag(server_failure_template_path(@conn, :index, @conn.params), method: :get, enforce_utf8: false, class: 'form-inline', style: "position:relative") do
+      = form_tag(ErrorioHelper.server_failure_path(@conn), method: :get, enforce_utf8: false, class: 'form-inline', style: "position:relative") do
         .form-group.margin-inline
-          .btn-group data-toggle="buttons"
+          .btn-group.margin-right-10 data-toggle="buttons"
             label.btn.btn-default-outline.active
               input type="radio" name="assigned" value='' All errors
             label.btn.btn-default-outline
               input type="radio" name="assigned" value='my' Only assigned to me
+          .btn-group data-toggle="buttons"
+            label.btn.btn-default-outline
+              input type="checkbox" name="state" value="all" Show done
         .form-group.margin-inline
           input#date_from.form-control.width-200.display-inline-block.margin-inline type="text" name="date_from" placeholder="From"
           span.margin-right-10 —
@@ -22,7 +28,7 @@ section.panel.panel-with-borders
               option value="last_time" Last time seen
         = submit "Show!", class: 'btn margin-inline'
     .display-inline-block
-      = link 'Clear filter', to: server_failure_template_path(@conn, :index), class: 'btn margin-inline'
+      = link 'Clear filter', to: @conn.request_path, class: 'btn margin-inline'
 
   .panel-body
     .table-responsive
@@ -51,5 +57,6 @@ section.panel.panel-with-borders
           = for serv <- @server_failures do
             = render "_server_failure.html", serv: serv, conn: @conn, current_user: @current_user
 
-    = if @page.total_pages > 1 do
-      = pagination_links @page
+    = paginate @conn, @kerosene
+    / = if @page.total_pages > 1 do
+      / = pagination_links @conn, @page, previous: ~E( <span aria-hidden="true"><i class="fa fa-arrow-left"></i></span><span class="sr-only">Previous</span>), next: ~E(<span aria-hidden="true"><i class="fa fa-arrow-right"></i></span><span class="sr-only">Next</span>)

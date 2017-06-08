@@ -11,7 +11,7 @@ defmodule Errorio.Api.ServerFailure.Builder do
     # parsed_params = (server_failure_params) # Elixir.Map version
     {failure_struct, template_struct} = create_structs(parsed_params, project.id)
     case Repo.transaction(fn ->
-      case find_server_failure_template(template_struct) do
+      case find_server_failure_template(template_struct, project) do
         {:ok, template} ->
             create_server_failure(template, failure_struct)
         {:error, reason} ->
@@ -45,15 +45,15 @@ defmodule Errorio.Api.ServerFailure.Builder do
     |> Repo.insert
   end
 
-  defp create_server_failure_template(template_struct) do
-    ServerFailureTemplate.create_changeset(%ServerFailureTemplate{}, Map.from_struct(template_struct))
+  defp create_server_failure_template(template_struct, project) do
+    ServerFailureTemplate.create_changeset(%ServerFailureTemplate{}, Map.from_struct(template_struct) |> Map.put_new(:user_id, project.responsible_id))
     |> Repo.insert
   end
 
-  defp find_server_failure_template(template_struct) do
+  defp find_server_failure_template(template_struct, project) do
     case Repo.get_by(ServerFailureTemplate, md5_hash: template_struct.md5_hash) do
       nil ->
-        create_server_failure_template(template_struct)
+        create_server_failure_template(template_struct, project)
       template ->
         {:ok, template}
     end

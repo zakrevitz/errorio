@@ -12,6 +12,9 @@ class Global {
     this.dataTableInit()
     this.datePickerInit()
     this.select2Init()
+    this.loading_similar = false
+    this.loaded_similar = false
+    this.loadSimilarErrors()
   }
 
   isotopeInit() {
@@ -97,13 +100,13 @@ class Global {
       },
       pk: 1,
       source: [
-            {text: "no_priority", value: "no_priority"},
-            {text: "trivial", value: "trivial"},
-            {text: "minor", value: "minor"},
-            {text: "major", value: "major"},
-            {text: "critical", value: "critical"},
-            {text: "mega_critical", value: "mega_critical"},
-            {text: "kiday_vse_i_zaymis_etim", value: "kiday_vse_i_zaymis_etim"}
+            {text: "No priority", value: "no_priority"},
+            {text: "Trivial", value: "trivial"},
+            {text: "Minor", value: "minor"},
+            {text: "Major", value: "major"},
+            {text: "Critical", value: "critical"},
+            {text: "Mega Critical", value: "mega_critical"},
+            {text: "КИДАЙ ВСЁ И ЗАЙМИСЬ ЭТИМ!", value: "kiday_vse_i_zaymis_etim"}
        ]
     });
   }
@@ -156,6 +159,33 @@ class Global {
       dropdownAutoWidth : true,
       minimumResultsForSearch: -1
     })
+  }
+
+  loadSimilarErrors() {
+    var similar_errors = { "errors": []}
+    self = this
+    $('a#similar_link').on('click', function(e) {
+      if (!self.loading_similar && !self.loaded_similar) {
+        var id = $('#similar #server_failure_template_id').val()
+        self.loading_similar = true
+        $.ajax({
+          url: "/errors?server_failure_template_id="+ id
+        }).done(function(data) {
+          self.loading_similar = false
+          self.loaded_similar = true
+          similar_errors["errors"] = data["data"]
+          self.renderTemplate(similar_errors)
+        });
+      }
+
+    })
+  }
+
+  renderTemplate(data) {
+    var template = $('#template').html();
+    var rendered = Mustache.render(template, data);
+    $('#similar_error_table').html(rendered);
+    self.tooltipInit()
   }
 }
 

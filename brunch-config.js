@@ -46,7 +46,8 @@ exports.config = {
           "web/static/vendor/js/hackertyper/hackertyper.js",
           "web/static/vendor/js/jquery-countTo/jquery.countTo.js",
           "web/static/vendor/js/jquery-steps/jquery.steps.min.js",
-          "web/static/vendor/js/nprogress/nprogress.js"
+          "web/static/vendor/js/nprogress/nprogress.js",
+          "web/static/vendor/js/mustache/mustache.min.js"
         ]
       }
     },

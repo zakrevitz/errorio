@@ -1,0 +1,24 @@
+= form_for @changeset, @action, fn f ->
+  .form-group
+    label.control-label
+      | Name:
+    = text_input f, :name, class: "form-control"
+    = error_tag f, :name
+
+  .form-group
+    label.control-label
+      | Template:
+    = select f, :template, @templates, class: "form-control"
+
+  .form-group
+    label.control-label
+      | Api Key:
+    = text_input f, :api_key, class: "form-control"
+
+  .form-group
+    label.control-label
+      | Responsible:
+    = select f, :responsible_id, @responsibles |> Enum.map(&{&1.name, &1.id}) |> List.insert_at(-1, {"-", nil}), class: "form-control"
+
+
+  = submit "Submit", class: "btn btn-primary"

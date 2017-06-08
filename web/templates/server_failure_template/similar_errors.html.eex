@@ -1,0 +1,11 @@
+{{#errors}}
+  <tr>
+    <td>{{id}}</td>
+    <td>{{title}}</td>
+    <td>{{host}}</td>
+    <td>{{server}}</td>
+    <td>
+      <a class="link-underlined" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{inserted_at}}">{{inserted_at_relative}}</a>
+    </td>
+  </tr
+{{/errors}}

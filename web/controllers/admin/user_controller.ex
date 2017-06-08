@@ -41,6 +41,13 @@ defmodule Errorio.Admin.UserController do
     end
   end
 
+  def show(conn, %{"id" => id}, current_user, _claims) do
+    {id, _} = Integer.parse(id)
+    conn
+    |> assign(:user, User |> preload(:projects) |> Repo.get!(id))
+    |> render("show.html", current_user: current_user)
+  end
+
   # TODO: Make selected user as admin.
   # def make_admin(conn, %{"id": id}, current_user, _claims) do
   #   Repo.get(User, id) |> User.make_admin!

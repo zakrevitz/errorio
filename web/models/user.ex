@@ -9,6 +9,7 @@ defmodule Errorio.User do
     field :is_admin, :boolean
 
     has_many :authorizations, Errorio.Authorization
+    has_many :projects, Errorio.Project, foreign_key: :responsible_id
     timestamps()
   end
 

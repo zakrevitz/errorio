@@ -1,5 +1,6 @@
 tr
-  td = @serv.title
+  td
+    = link @serv.title, to: server_failure_template_path(@conn, :show, @serv.id), class: "link-underlined"
   td
     = if @serv.assignee do
       = @serv.assignee.name
@@ -12,7 +13,6 @@ tr
     span.label.label-pill class="label-#{ErrorioHelper.css_class_from_state(@serv.state)}"
       = @serv.state
   td
-
     i data-toggle="tooltip" data-title="#{@serv.priority}" data-placement="top" class="#{ErrorioHelper.css_class_from_priority(@serv.priority)}"
   td
     a.link-underlined href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="#{ErrorioHelper.format_date(@serv.inserted_at)}"

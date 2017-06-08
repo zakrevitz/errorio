@@ -1,0 +1,24 @@
+section.panel.panel-with-borders
+  .panel-heading
+    h3 Event logs
+  .panel-body
+    .table-responsive
+      table.table.table-hover.nowrap
+        thead.thead-default
+          tr
+            th ID
+            th Info
+            th Responsible
+            th Time
+        tbody
+          = for event <- @transitions do
+            tr
+              td=event.id
+              td=event.info
+              td
+                = if event.responsible do
+                  =event.responsible.name
+                - else
+                  | Automatic
+
+              td=event.inserted_at

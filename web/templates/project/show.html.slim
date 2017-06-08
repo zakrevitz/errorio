@@ -1,0 +1,30 @@
+.dashboard-container
+  .row
+    .col-xl-4.col-lg-12
+      .widget.widget-one
+        .widget-header.height-300 style="background-image: url(#{static_path(@conn, "/images/project-bck.jpeg")})"
+            h2.color-white = @project.name
+        .widget-body.clearfix
+          .s1
+            a class="avatar" href="javascript:void(0);"
+              img src="#{static_path(@conn, "/images/user.png")}" alt="Alternative text to the image"
+            br
+            = if @project.responsible do
+              strong= @project.responsible.name
+            - else
+              strong No
+            br
+            | responsible
+          .s2
+            .widget-info
+              dl.dl-horizontal
+                dt Template
+                dd = @project.template
+    .col-xl-8.col-lg-12
+      = render "_charts.html", project: @project, conn: @conn
+
+
+  .widget.widget-four.background-transparent
+    .row
+      = render "_stats.html", stats: @stats, conn: @conn, project: @project
+

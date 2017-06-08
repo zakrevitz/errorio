@@ -9,6 +9,7 @@ defmodule Errorio.Project do
     field :api_key, :string
 
     has_many :server_failure_templates, Errorio.ServerFailureTemplate
+    belongs_to :responsible, Errorio.User, foreign_key: :responsible_id
 
     timestamps()
   end
@@ -16,13 +17,13 @@ defmodule Errorio.Project do
   def changeset(struct, params = %{ "api_key" => "" } ) do
     params = Map.put(params, "api_key", generate_api_key())
     struct
-    |> cast(params, [:name, :template, :api_key])
+    |> cast(params, [:name, :template, :api_key, :responsible_id])
     |> validate_required([:name, :template, :api_key])
   end
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :template, :api_key])
+    |> cast(params, [:name, :template, :api_key, :responsible_id])
     |> validate_required([:name, :template, :api_key])
   end
 

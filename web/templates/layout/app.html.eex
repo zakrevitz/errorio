@@ -11,7 +11,7 @@
       <meta name="guardian_token" content="<%= Guardian.Plug.current_token(@conn) %>">
     <% end %>
 
-    <title>Hello Errorio!</title>
+    <title>Errorio - server error browser</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
@@ -51,6 +51,5 @@
       </div>
     </section>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
   </body>
 </html>

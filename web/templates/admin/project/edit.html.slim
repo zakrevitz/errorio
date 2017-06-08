@@ -1,0 +1,7 @@
+section.panel.panel-with-borders
+  .panel-heading
+    h2
+      ' Edit
+      = @project.name
+  .panel-body
+    = render "form.html", changeset: @changeset, action: admin_project_path(@conn, :update, @project), templates: @templates, responsibles: @responsibles

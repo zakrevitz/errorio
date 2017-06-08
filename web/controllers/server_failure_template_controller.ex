@@ -5,25 +5,29 @@ defmodule Errorio.ServerFailureTemplateController do
   alias Errorio.StateMachine
   # alias Errorio.Statistic.ServerFailure, as: ServerFailureStats
   alias Errorio.ServerFailure, as: ServerFailure
+  alias Errorio.Project
 
   plug Guardian.Plug.EnsureAuthenticated, handler: __MODULE__, typ: "access"
 
   def index(conn, params, current_user, _claims) do
-    page =
+    {server_failures, kerosene} =
       ServerFailureTemplate
       |> ServerFailureTemplate.filter(params, current_user)
       |> preload(:assignee)
       |> Repo.paginate(params)
 
+    project = find_project(params)
+
     render conn, :index,
-      server_failures: page.entries,
+      server_failures: server_failures,
       current_user: current_user,
-      page: page
+      kerosene: kerosene,
+      project: project
   end
 
   def show(conn, %{"id" => id}, current_user, _claims) do
     {id, _} = Integer.parse(id)
-    server_failure_template = find_resource(id) |> Repo.preload([:assignee])
+    server_failure_template = find_resource(id) |> Repo.preload([[event_transition_logs: :responsible], :assignee, :project])
     server_failure_info = find_server_failure_info(id)
     case server_failure_template do
       nil ->
@@ -71,12 +75,39 @@ defmodule Errorio.ServerFailureTemplateController do
         |> redirect(to: server_failure_template_path(conn, :index))
       server_failure_template ->
         result = server_failure_template
-        |> ServerFailureTemplate.update_assignee(current_user.id)
+        |> ServerFailureTemplate.update_assignee(current_user.id, current_user)
         case result do
           {:ok, server_failure_template} ->
             conn
             |> put_flash(:info, "Not it is officially your problem")
             |> redirect(to: server_failure_template_path(conn, :show, server_failure_template.id))
+          {:error, reason} ->
+            conn
+            |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(reason)}")
+            |> redirect(to: server_failure_template_path(conn, :index))
+        end
+    end
+  end
+
+  def update(conn, %{"server_failure_template" => params, "id" => id}, current_user, _claims) do
+    {id, _} = Integer.parse(id)
+    case find_resource(id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Oops, something gone wrong")
+        |> redirect(to: server_failure_template_path(conn, :index))
+      server_failure_template ->
+        changeset = server_failure_template
+        |> ServerFailureTemplate.changeset(params)
+        result = changeset |> Errorio.Repo.update
+        case result do
+          {:ok, server_failure_template} ->
+            IO.puts inspect(changeset)
+            if changeset.changes |> Map.has_key?(:priority) do
+              ServerFailureTemplate.log_transition(result, changeset, current_user, :priority)
+            end
+            conn
+            |> render("ok.json", server_failure_template: server_failure_template)
           {:error, reason} ->
             conn
             |> put_flash(:error, "Could not assign. Error: #{ErrorioHelper.humanize_atom(reason)}")
@@ -103,5 +134,12 @@ defmodule Errorio.ServerFailureTemplateController do
       |> order_by(desc: :updated_at)
       |> limit(1)
       |> Repo.one
+  end
+
+  defp find_project(params) do
+    case Map.has_key?(params, "project_id") do
+      true -> Project |> Repo.get(Map.get(params, "project_id"))
+      _ -> nil
+    end
   end
 end

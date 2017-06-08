@@ -1,5 +1,6 @@
 defmodule Errorio.ServerFailureTemplate do
   use Errorio.Web, :model
+  alias Errorio.ErrorioHelper
 
   use EctoStateMachine,
     states: [:to_do, :in_progress, :to_check, :done, :reopened],
@@ -55,7 +56,7 @@ defmodule Errorio.ServerFailureTemplate do
 
   def create_changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:md5_hash, :title, :processed_by, :params, :project_id])
+    |> cast(params, [:md5_hash, :title, :processed_by, :params, :project_id, :user_id])
     |> validate_required([:md5_hash, :title, :project_id])
   end
 
@@ -88,17 +89,17 @@ defmodule Errorio.ServerFailureTemplate do
   def assign(model, user) do
     case model do
       {:ok, server_failure_template} ->
-        update_assignee(server_failure_template, user.id)
+        update_assignee(server_failure_template, user.id, nil)
       {:error, reason} -> {:error, reason}
       server_failure_template ->
-        update_assignee(server_failure_template, user.id)
+        update_assignee(server_failure_template, user.id, nil)
     end
   end
 
-  def log_transition(new_template, old_template, responsible) do
+  def log_transition(new_template, old_template, responsible, reason \\ :state) do
     case new_template do
       {:ok, server_failure_template} ->
-        params = %{info: generate_info(old_template, server_failure_template, responsible.name), responsible_id: responsible.id}
+        params = %{info: generate_info(server_failure_template, old_template, responsible.name, reason), responsible_id: responsible.id}
         server_failure_template
         |> Ecto.build_assoc(:event_transition_logs)
         |> Errorio.EventTransitionLog.changeset(params)
@@ -108,19 +109,31 @@ defmodule Errorio.ServerFailureTemplate do
     end
   end
 
-  def update_assignee(server_failure_template, user_id) do
-    server_failure_template
+  def update_assignee(server_failure_template, user_id, responsible) do
+    case server_failure_template
     |> assign_changeset(%{user_id: user_id})
-    |> Errorio.Repo.update
+    |> Errorio.Repo.update do
+      {:ok, sf} ->
+        log_transition({:ok, sf}, nil, responsible, :assignee)
+        {:ok, sf}
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   def statistics(query) do
     (from se in query,
       select: %{
-        unassigned: fragment("count(case when user_id IS NULL then 1 else null end)"),
-        unresolved: fragment("count(case when state = 'to_do' then 1 else null end)"),
-        in_progress: fragment("count(case when state = 'in_progress' then 1 else null end)"),
-        reopened: fragment("count(case when state = 'reopened' then 1 else null end)")
+        all_distinct: fragment("count(*)"),
+        unassigned_distinct: fragment("count(case when user_id IS NULL then 1 else null end)"),
+        unresolved_distinct: fragment("count(case when state = 'to_do' then 1 else null end)"),
+        in_progress_distinct: fragment("count(case when state = 'in_progress' then 1 else null end)"),
+        reopened_distinct: fragment("count(case when state = 'reopened' then 1 else null end)"),
+
+        all: fragment("sum(server_failure_count)"),
+        unassigned: fragment("sum(case when user_id IS NULL then server_failure_count else 0 end)"),
+        unresolved: fragment("sum(case when state = 'to_do' then server_failure_count else 0 end)"),
+        in_progress: fragment("sum(case when state = 'in_progress' then server_failure_count else 0 end)"),
+        reopened: fragment("sum(case when state = 'reopened' then server_failure_count else 0 end)")
       }
     ) |> Errorio.Repo.one
   end
@@ -152,8 +165,15 @@ defmodule Errorio.ServerFailureTemplate do
     |> sort_attributes(sort)
   end
 
-  defp generate_info(old, new, name) do
-    name <> " moved bug from state: " <> old.state <> " to: " <> new.state
+  defp generate_info(new, old, name, reason) do
+    case reason do
+      :priority ->
+        name <> " changed priority to " <> ErrorioHelper.humanize_atom(new.priority)
+      :assignee ->
+        "Assignee changed to " <> name
+      _ ->
+        name <> " moved bug from state: " <> old.state <> " to: " <> new.state
+    end
   end
 
   defp filter_project(changeset, nil), do: changeset
@@ -169,8 +189,9 @@ defmodule Errorio.ServerFailureTemplate do
 
   defp filter_state(changeset, state) do
     case state do
+      st when is_binary(st) and st == "all" -> changeset
       st when is_binary(st) -> changeset |> where([ser_tem], ser_tem.state == ^state)
-      _ -> changeset
+      _ -> changeset |> where([ser_tem], ser_tem.state != "done")
     end
   end
 

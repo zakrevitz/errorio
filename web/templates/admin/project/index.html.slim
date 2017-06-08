@@ -13,6 +13,7 @@ section.panel.panel-with-borders
             th Name
             th Template
             th API key
+            th Responsible
             th Actions
         tfoot
           tr
@@ -20,6 +21,7 @@ section.panel.panel-with-borders
             th Name
             th Template
             th API key
+            th Responsible
             th Actions
         tbody
           = for project <- @projects do
@@ -28,13 +30,17 @@ section.panel.panel-with-borders
               td= project.name
               td= project.template
               td= project.api_key
+              = if project.responsible do
+                td= project.responsible.name
+              - else
+                 td -
               td.admin-actions
                 = link to: admin_project_path(@conn, :show, project.id), class: "link-underlined margin-right-15" do
                   i.icmn-pencil5
                   |  Details
-                / = link to: admin_project_path(@conn, :edit, project.id), class: "link-underlined margin-right-15" do
-                    / i.icmn-database-edit
-                    / | Edit
+                = link to: admin_project_path(@conn, :edit, project.id), class: "link-underlined margin-right-15" do
+                    i.icmn-database-edit
+                    | Edit
                 = link to: admin_project_path(@conn, :delete, project.id), method: :delete, class: "link-underlined" do
                   i.icmn-cross
                   |  Delete

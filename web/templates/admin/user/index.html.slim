@@ -37,6 +37,9 @@ section.panel.panel-with-borders
                 = link to: admin_impersonation_path(@conn, :impersonate, to_string(user.id)), method: :post, class: "link-underlined margin-right-15" do
                   i.icmn-enter
                   |  Impersonate
+                = link to: admin_user_path(@conn, :show, user.id), class: "link-underlined margin-right-15" do
+                  i.icmn-pencil5
+                  |  Details
                 = link to: admin_user_path(@conn, :edit, user.id), class: "link-underlined margin-right-15" do
                   i.icmn-database-edit
                   |  Edit

@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 
-    <title>Admin - Errori</title>
+    <title>Admin - Errorio</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 

@@ -46,8 +46,18 @@ defmodule Errorio.Router do
       get "/assign", ServerFailureTemplateController, :assign, as: :assign
     end
 
-    resources "/projects", ProjectController
+    resources "/projects", ProjectController do
+      resources "/errors", ServerFailureTemplateController do
+        get "/migrate", ServerFailureTemplateController, :migrate, as: :migrate
+        get "/assign", ServerFailureTemplateController, :assign, as: :assign
+      end
+    end
     resources "/users", UserController, only: [:new]
+  end
+
+  scope "/errors", Errorio do
+    pipe_through [:browser, :browser_auth, :impersonation_browser_auth, :api]
+    get "/", ServerFailureController, :index
   end
 
   scope "/auth", Errorio do

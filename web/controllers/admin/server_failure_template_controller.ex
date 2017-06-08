@@ -9,12 +9,12 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
   plug EnsureAuthenticated, [key: :admin, handler: __MODULE__]
 
   def index(conn, params, current_user, _claims) do
-    page =
+    {server_failures, kerosene} =
       ServerFailureTemplate
       |> preload([:project, :assignee])
       |> order_by([ser_tem], desc: ser_tem.last_time_seen_at)
       |> Repo.paginate(params)
-    render(conn, "index.html", server_failures: page.entries, current_user: current_user, page: page)
+    render(conn, "index.html", server_failures: server_failures, current_user: current_user, kerosene: kerosene)
   end
 
   def show(conn, %{"id" => id}, current_user, _claims) do
@@ -55,7 +55,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
     end
   end
 
-  def update(conn, %{"server_failure_template" => params, "id" => id}, _current_user, _claims) do
+  def update(conn, %{"server_failure_template" => params, "id" => id}, current_user, _claims) do
     {id, _} = Integer.parse(id)
     case find_resource(id) do
       nil ->
@@ -63,11 +63,15 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
         |> put_flash(:error, "Oops, something gone wrong")
         |> redirect(to: admin_server_failure_template_path(conn, :index))
       server_failure_template ->
-        result = server_failure_template
+        changeset = server_failure_template
         |> ServerFailureTemplate.changeset(params)
-        |> Errorio.Repo.update
+        result = changeset |> Errorio.Repo.update
         case result do
           {:ok, server_failure_template} ->
+            IO.puts inspect(changeset)
+            if changeset.changes |> Map.has_key?(:priority) do
+              ServerFailureTemplate.log_transition(result, changeset, current_user, :priority)
+            end
             conn
             |> render("assign.json", server_failure_template: server_failure_template)
           {:error, reason} ->
@@ -78,7 +82,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
     end
   end
 
-  def assign(conn, %{"server_failure_template" => params, "server_failure_template_id" => id}, _current_user, _claims) do
+  def assign(conn, %{"server_failure_template" => params, "server_failure_template_id" => id}, current_user, _claims) do
     {id, _} = Integer.parse(id)
     case find_resource(id) do
       nil ->
@@ -87,7 +91,7 @@ defmodule Errorio.Admin.ServerFailureTemplateController do
         |> redirect(to: admin_server_failure_template_path(conn, :index))
       server_failure_template ->
         result = server_failure_template
-        |> ServerFailureTemplate.update_assignee(params["assignee_id"])
+        |> ServerFailureTemplate.update_assignee(params["assignee_id"], current_user)
         case result do
           {:ok, server_failure_template} ->
             conn

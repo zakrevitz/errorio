@@ -1,0 +1,23 @@
+section.panel.panel-with-borders
+  .panel-heading
+    h2 = @user.name
+  .panel-body
+    dl.dl-horizontal
+      dt Email
+      dd = @user.email
+      dt Is admin?
+      dd
+        = if @user.is_admin do
+          i.icmn-checkmark.green
+        - else
+          i.icmn-cross2.fa-lg.red
+      dt Created at
+      dd = = ErrorioHelper.format_date(@user.inserted_at)
+      dt Updated at
+      dd = = ErrorioHelper.format_date(@user.updated_at)
+    = if @user.projects do
+      h2 Responsible for:
+      = for project <- @user.projects do
+        ul.list-unstyled
+          li = link project.name, to: admin_project_path(@conn, :show, project.id), class: "link-underlined margin-right-15"
+

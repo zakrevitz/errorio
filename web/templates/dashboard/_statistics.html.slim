@@ -1,42 +1,43 @@
 .widget.widget-four.background-transparent
   .row
-    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
+    .col-xl-2.col-lg-6.col-sm-6.col-xs-12
+      = link to: server_failure_template_path(@conn, :index) do
+        .step-block
+          span.step-digit
+            i.icmn-bug
+          .step-desc
+            span.step-title All Errors
+            p Total: #{@stats[:all_distinct]} (#{@stats[:all]})
+
+    .col-xl-2.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, state: "to_do") do
         .step-block
           span.step-digit
             i.icmn-question4
           .step-desc
             span.step-title Unresolved Errors
-            p
-              ' Total:
-              = @stats[:unresolved]
-    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
+            p Total: #{@stats[:unresolved_distinct]} (#{@stats[:unresolved]})
+    .col-xl-2.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, sort: "unassigned") do
         .step-block
           span.step-digit
             i.icmn-user-cancel
           .step-desc
             span.step-title Unassigned Errors
-            p
-              ' Total:
-              = @stats[:unassigned]
-    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
+            p Total: #{@stats[:unassigned_distinct]} (#{@stats[:unassigned]})
+    .col-xl-2.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, state: "in_progress", sort: "my") do
         .step-block
           span.step-digit
             i.icmn-hour-glass2
           .step-desc
             span.step-title Errors in progress
-            p
-              ' Total:
-              = @stats[:in_progress]
-    .col-xl-3.col-lg-6.col-sm-6.col-xs-12
+            p Total: #{@stats[:in_progress_distinct]} (#{@stats[:in_progress]})
+    .col-xl-2.col-lg-6.col-sm-6.col-xs-12
       = link to: server_failure_template_path(@conn, :index, state: "reopened", sort: "my") do
         .step-block
           span.step-digit
             i.icmn-reset
           .step-desc
             span.step-title Reopened Errors
-            p
-              ' Total:
-              = @stats[:reopened]
+            p Total: #{@stats[:reopened_distinct]} (#{@stats[:reopened]})

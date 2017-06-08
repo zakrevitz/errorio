@@ -8,13 +8,15 @@ defmodule Errorio.Admin.ProjectController do
   plug EnsureAuthenticated, [key: :admin, handler: __MODULE__]
 
   def index(conn, _params, current_user, _claims) do
-    projects = Repo.all(Project)
+    projects = Project |> preload(:responsible)|> order_by(asc: :id) |> Repo.all
     render(conn, "index.html", projects: projects, current_user: current_user)
   end
 
   def new(conn, _params , current_user, _claims) do
     changeset = Project.create_changeset(%Project{})
-    render conn, "new.html", current_user: current_user, changeset: changeset, templates: Project.templates
+    responsibles = Errorio.User |> Repo.all
+    render conn, "new.html", current_user: current_user,
+                             changeset: changeset, templates: Project.templates, responsibles: responsibles
   end
 
   def create(conn, %{"project" => project_params}, current_user, _claims) do
@@ -28,6 +30,27 @@ defmodule Errorio.Admin.ProjectController do
         conn
         |> assign(:templates, Project.templates)
         |> render("new.html", changeset: changeset, current_user: current_user)
+    end
+  end
+
+  def edit(conn, %{"id" => id}, current_user, _claims) do
+    project = Repo.get!(Project, id)
+    changeset = Project.changeset(project)
+    responsibles = Errorio.User |> Repo.all
+    render(conn, "edit.html", project: project, changeset: changeset, templates: Project.templates, current_user: current_user, responsibles: responsibles)
+  end
+
+  def update(conn, %{"id" => id, "project" => project_params}, current_user, _claims) do
+    project = Repo.get!(Project, id)
+    changeset = Project.changeset(project, project_params)
+
+    case Repo.update(changeset) do
+      {:ok, project} ->
+        conn
+        |> put_flash(:info, "Project updated successfully.")
+        |> redirect(to: admin_project_path(conn, :index))
+      {:error, changeset} ->
+        render(conn, "edit.html", project: project, changeset: changeset, templates: Project.templates, current_user: current_user)
     end
   end
 

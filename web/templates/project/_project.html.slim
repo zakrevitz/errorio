@@ -1,7 +1,7 @@
-tr.clickable_row onclick="window.document.location='#{server_failure_template_path(@conn, :index, project_id: @project.id)}';"
+tr.clickable_row onclick="window.document.location='#{project_path(@conn, :show, @project.id)}';"
   td= @project.id
   td= @project.name
   td
-    = link to: server_failure_template_path(@conn, :index, project_id: @project.id), class: "link-underlined" do
+    = link to: project_path(@conn, :show, @project.id), class: "link-underlined" do
       = ErrorioHelper.sum(@project.server_failure_templates, :server_failure_count)
   td= @project.template

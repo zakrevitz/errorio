@@ -1,5 +1,6 @@
 defmodule Errorio.ErrorioHelper do
   use Timex
+  import Errorio.Router.Helpers
 
   def humanize_atom(atom) do
     case is_atom(atom) do
@@ -64,5 +65,11 @@ defmodule Errorio.ErrorioHelper do
       :kiday_vse_i_zaymis_etim -> "icmn-gun color-danger"
     end
   end
-end
 
+  def server_failure_path(conn) do
+    case Map.has_key?(conn.params, "project_id") do
+      true -> project_server_failure_template_path(conn, :index, Map.get(conn.params, "project_id"), conn.params)
+      _ -> server_failure_template_path(conn, :index, conn.params)
+    end
+  end
+end
