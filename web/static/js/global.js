@@ -15,6 +15,9 @@ class Global {
     this.loading_similar = false
     this.loaded_similar = false
     this.loadSimilarErrors()
+    if ($('#chartist').length > 0) {
+      this.chartlistInit()
+    }
   }
 
   isotopeInit() {
@@ -186,6 +189,46 @@ class Global {
     var rendered = Mustache.render(template, data);
     $('#similar_error_table').html(rendered);
     self.tooltipInit()
+  }
+
+  chartlistInit() {
+    var series = {}
+    var id = $('#project_id').val()
+    var uri = "/errors/charts"
+    var xAxis = []
+    var yAxis = []
+    if (!(id == null)) {
+      uri = uri + "?project_id=" + id
+    }
+    $.ajax({
+      url: uri
+    }).done( function(data) {
+      series = data["data"];
+      series.forEach(function(el) {
+        yAxis.push(el[0])
+        xAxis.push({meta: el[0], value: el[1]})
+      });
+      var data = {
+        labels: yAxis,
+        series: [
+          xAxis
+        ]
+      };
+      var options = {
+        axisY: {
+          onlyInteger: true,
+          offset: 20
+        },
+        low: 0,
+        showArea: true,
+        fullWidth: true,
+        plugins: [
+          Chartist.plugins.tooltip()
+        ]
+        }
+      new Chartist.Line('.ct-chart', data, options);
+    })
+
   }
 }
 

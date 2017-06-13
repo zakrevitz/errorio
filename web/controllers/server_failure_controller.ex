@@ -18,6 +18,14 @@ defmodule Errorio.ServerFailureController do
       kerosene: kerosene
   end
 
+  def charts(conn, params, _current_user, _claims) do
+    project_id = Map.get(params, "project_id", [])
+    series = Errorio.Statistic.ServerFailure.chart(project_id)
+    render conn, :charts,
+      series: series
+  end
+
+
   def unauthenticated(conn, _params) do
     conn
     |> put_flash(:error, "Authentication required")

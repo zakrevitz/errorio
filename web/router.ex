@@ -58,6 +58,7 @@ defmodule Errorio.Router do
   scope "/errors", Errorio do
     pipe_through [:browser, :browser_auth, :impersonation_browser_auth, :api]
     get "/", ServerFailureController, :index
+    get "/charts", ServerFailureController, :charts
   end
 
   scope "/auth", Errorio do

@@ -18,4 +18,8 @@ defmodule Errorio.ServerFailureView do
       inserted_at_relative: ErrorioHelper.format_date_relative(server_failure.inserted_at)
     }
   end
+
+  def render("charts.json", %{series: series, conn: conn}) do
+    %{ data: series }
+  end
 end
